@@ -1,0 +1,2172 @@
+=== STRUKTUR FILE ===
+./
+    app.py
+    full_codebase.txt
+    gabung.py
+    login.py
+    main.py
+    songs_store.json
+    components/
+        bottom_player.py
+        sidebar_admin.py
+        sidebar_user.py
+        topbar.py
+    logic/
+        controller_player.py
+        library.py
+        playlist.py
+    pages_admin/
+        add_song.py
+        dashboard.py
+        delete_song.py
+        edit_song.py
+        import_csv.py
+        songs_list.py
+    pages_user/
+        home_user.py
+        playlist_user.py
+        search_user.py
+
+
+=== ISI FILE ===
+
+
+====================
+FILE: .\app.py
+====================
+import customtkinter as ctk
+from tkinter import messagebox
+
+# logic
+from logic.library import SongLibrary
+from logic.playlist import Playlist
+from logic.controller_player import PlayerController
+
+# components
+from components.topbar import TopBar
+from components.sidebar_user import SidebarUser
+from components.sidebar_admin import SidebarAdmin
+from components.bottom_player import BottomPlayer
+
+# pages
+from pages_user.home_user import render_home
+from pages_user.search_user import render_search
+from pages_user.playlist_user import render_playlist
+from pages_admin.dashboard import render_dashboard
+from pages_admin.songs_list import render_songs_list
+from pages_admin.add_song import render_add_song
+from pages_admin.edit_song import render_edit_song
+from pages_admin.delete_song import render_delete_song
+from pages_admin.import_csv import render_import_csv
+
+# login
+from login import LoginPage
+
+# --- CONFIG TEMA ---
+ctk.set_appearance_mode("Light")
+COLORS = {
+    "primary": "#0047FF",       # Electric Blue
+    "hover": "#0033CC",         # Darker Electric
+    "bg_sidebar": "#001040",    # Deep Navy
+    "bg_content": "#F0F5FF",    # Ice Blue
+    "text_head": "#001A5E",     # Navy Text
+    "danger": "#FF3333"         # Red for delete
+}
+
+class App(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+        self.title("MyMusic - Electric Blue Edition")
+        self.geometry("1280x850")
+        
+        # logic layers
+        self.library = SongLibrary()
+        self.playlist = Playlist() # Saved User Playlist
+        
+        # Player Controller baru (Queue Based)
+        self.player = PlayerController() 
+
+        # containers
+        self.header = None
+        self.main_container = None
+        self.sidebar_frame = None
+        self.content_frame = None
+        self.bottom_player = None
+
+        self.role = "login"
+
+        # load sample songs
+        self.library.load_sample_if_empty()
+
+        self.show_login()
+
+    def clear_root(self):
+        for w in self.winfo_children():
+            w.destroy()
+
+    def show_login(self):
+        self.clear_root()
+        self.role = "login"
+        LoginPage(self, on_login=self._on_login, colors=COLORS).pack(fill="both", expand=True)
+
+    def _on_login(self, role):
+        if role not in ("user", "admin"): return
+        self.role = role
+        self.build_main_ui()
+
+    def build_main_ui(self):
+        self.clear_root()
+
+        # 1. TOPBAR
+        self.header = TopBar(self, logout_callback=self.on_logout, colors=COLORS)
+        self.header.pack(side="top", fill="x")
+
+        # 2. MAIN CONTAINER
+        self.main_container = ctk.CTkFrame(self, fg_color="transparent")
+        self.main_container.pack(side="top", fill="both", expand=True)
+
+        # 3. SIDEBAR
+        if self.role == "user":
+            self.sidebar_frame = SidebarUser(
+                self.main_container,
+                colors=COLORS,
+                on_home=lambda: self.load_page("home"),
+                on_search=lambda: self.load_page("search"),
+                on_playlist=lambda: self.load_page("playlist"),
+            )
+        else: # admin
+            self.sidebar_frame = SidebarAdmin(
+                self.main_container,
+                colors=COLORS,
+                on_dashboard=lambda: self.load_page("admin_dashboard"),
+                on_songs=lambda: self.load_page("admin_songs"),
+                on_add=lambda: self.load_page("admin_add"),
+                on_import=lambda: self.load_page("admin_import")
+            )
+        
+        self.sidebar_frame.pack(side="left", fill="y")
+
+        # 4. CONTENT FRAME
+        self.content_frame = ctk.CTkFrame(self.main_container, fg_color=COLORS["bg_content"], corner_radius=15)
+        self.content_frame.pack(side="left", fill="both", expand=True, padx=15, pady=15)
+
+        # 5. BOTTOM PLAYER (User Only)
+        if self.role == "user":
+            self.bottom_player = BottomPlayer(
+                self.content_frame, 
+                colors=COLORS,
+                prev_cb=self.on_prev,
+                play_cb=self.on_play_pause, # Satu fungsi toggle
+                next_cb=self.on_next
+            )
+            self.bottom_player.pack(side="bottom", fill="x")
+
+        # Default page
+        if self.role == "user":
+            self.load_page("home")
+        else:
+            self.load_page("admin_dashboard")
+
+    def load_page(self, page, **kwargs):
+        # Clear content area (kecuali player)
+        for w in self.content_frame.winfo_children():
+            if w != self.bottom_player:
+                w.destroy()
+        
+        # Wrapper halaman
+        page_area = ctk.CTkFrame(self.content_frame, fg_color="transparent")
+        page_area.pack(fill="both", expand=True, side="top")
+
+        if page == "home":
+            render_home(page_area, self.library, colors=COLORS,
+                        on_play_context=self.play_from_context) # Pass fungsi play context
+        
+        elif page == "search":
+            render_search(page_area, self.library, colors=COLORS,
+                          on_play_context=self.play_from_context,
+                          on_add=self.add_to_playlist)
+
+        elif page == "playlist":
+            render_playlist(page_area, self.playlist, colors=COLORS,
+                            on_play_context=self.play_from_playlist,
+                            on_remove=self.remove_from_playlist)
+
+        elif page == "admin_dashboard":
+            render_dashboard(page_area, self.library, colors=COLORS)
+
+        elif page == "admin_songs":
+            render_songs_list(page_area, self.library, colors=COLORS,
+                on_edit=lambda sid: self.load_page("admin_edit", song_id=sid),
+                on_delete=lambda sid: self.load_page("admin_delete", song_id=sid))
+        
+        elif page == "admin_add":
+             render_add_song(page_area, self.library, colors=COLORS, on_saved=lambda: self.load_page("admin_songs"))
+        
+        elif page == "admin_edit":
+             render_edit_song(page_area, self.library, colors=COLORS, song_id=kwargs.get("song_id"), on_saved=lambda: self.load_page("admin_songs"))
+        
+        elif page == "admin_delete":
+             render_delete_song(page_area, self.library, colors=COLORS, song_id=kwargs.get("song_id"), on_deleted=lambda: self.load_page("admin_songs"))
+        
+        elif page == "admin_import":
+            from pages_admin.import_csv import render_import_csv
+            render_import_csv(page_area, self.library, colors=COLORS, on_finished=lambda: self.load_page("admin_songs"))
+
+        self.refresh_bottom_player()
+
+    # --- LOGIC PLAYER & PLAYLIST ---
+    
+    # Fungsi ini dipanggil dari Home/Search. 
+    # Menerima: list_lagu_context (semua lagu di halaman itu) dan index lagu yang diklik
+    def play_from_context(self, song_list, start_index):
+        self.player.set_queue(song_list, start_index)
+        self.refresh_bottom_player()
+
+    def play_from_playlist(self, song_id):
+        # Konversi LinkedList Playlist ke List biasa untuk PlayerController
+        songs = self.playlist.listSongs()
+        # Cari index
+        idx = 0
+        for i, s in enumerate(songs):
+            if s.id == song_id:
+                idx = i
+                break
+        self.player.set_queue(songs, idx)
+        self.refresh_bottom_player()
+
+    def add_to_playlist(self, song_id):
+        node = self.library.findNodeById(song_id)
+        if not node: return
+        if self.playlist.addSong(node.song):
+            messagebox.showinfo("Sukses", "Lagu ditambahkan ke Koleksi.")
+        else:
+            messagebox.showwarning("Info", "Lagu sudah ada di playlist.")
+
+    def remove_from_playlist(self, song_id):
+        if self.playlist.removeSong(song_id):
+            messagebox.showinfo("Dihapus", "Lagu dihapus.")
+            # Refresh halaman playlist
+            self.load_page("playlist")
+
+    def on_play_pause(self):
+        if self.player.is_playing:
+            self.player.pause()
+        else:
+            self.player.play()
+        self.refresh_bottom_player()
+
+    def on_next(self):
+        self.player.next()
+        self.refresh_bottom_player()
+
+    def on_prev(self):
+        self.player.prev()
+        self.refresh_bottom_player()
+
+    def refresh_bottom_player(self):
+        if self.role != "user" or not self.bottom_player: return
+        self.bottom_player.update_state(self.player.current_song, self.player.is_playing)
+
+    def on_logout(self):
+        if messagebox.askyesno("Logout", "Keluar aplikasi?"):
+            self.show_login()
+
+====================
+FILE: .\gabung.py
+====================
+import os
+
+# Konfigurasi: Folder/File yang ingin DIABAIKAN (agar tidak terlalu berat)
+IGNORE_DIRS = {'.git', 'node_modules', '__pycache__', 'venv', 'env', '.idea', '.vscode', 'dist', 'build'}
+IGNORE_EXTS = {'.png', '.jpg', '.jpeg', '.gif', '.ico', '.pdf', '.exe', '.pyc', '.zip', '.mp3', '.mp4'}
+
+def merge_files(output_file='full_codebase.txt'):
+    with open(output_file, 'w', encoding='utf-8') as outfile:
+        # Tulis struktur folder di awal
+        outfile.write("=== STRUKTUR FILE ===\n")
+        for root, dirs, files in os.walk('.'):
+            # Filter folder yang diabaikan
+            dirs[:] = [d for d in dirs if d not in IGNORE_DIRS]
+            level = root.replace('.', '').count(os.sep)
+            indent = ' ' * 4 * (level)
+            outfile.write('{}{}/\n'.format(indent, os.path.basename(root)))
+            subindent = ' ' * 4 * (level + 1)
+            for f in files:
+                if not any(f.endswith(ext) for ext in IGNORE_EXTS):
+                    outfile.write('{}{}\n'.format(subindent, f))
+        
+        outfile.write("\n\n=== ISI FILE ===\n\n")
+
+        # Tulis isi setiap file
+        for root, dirs, files in os.walk('.'):
+            dirs[:] = [d for d in dirs if d not in IGNORE_DIRS]
+            
+            for file in files:
+                if file == 'gabung_code.py' or file == output_file:
+                    continue # Jangan masukkan script ini sendiri
+                
+                # Skip file binary/gambar
+                if any(file.endswith(ext) for ext in IGNORE_EXTS):
+                    continue
+
+                path = os.path.join(root, file)
+                
+                try:
+                    with open(path, 'r', encoding='utf-8') as infile:
+                        content = infile.read()
+                        outfile.write(f"\n{'='*20}\nFILE: {path}\n{'='*20}\n")
+                        outfile.write(content + "\n")
+                except Exception as e:
+                    print(f"Gagal membaca {path}: {e}")
+
+    print(f"Selesai! Semua kode ada di file: {output_file}")
+
+if __name__ == "__main__":
+    merge_files()
+
+====================
+FILE: .\login.py
+====================
+import customtkinter as ctk
+from tkinter import messagebox, StringVar
+
+class LoginPage(ctk.CTkFrame):
+    def __init__(self, parent, on_login, colors):
+        super().__init__(parent, fg_color="#FFFFFF")
+        self.on_login = on_login
+        self.colors = colors
+        
+        self.pin_var = StringVar()
+
+        # Grid layout 2 kolom
+        self.grid_columnconfigure(0, weight=1) # Kiri (Branding)
+        self.grid_columnconfigure(1, weight=1) # Kanan (Input PIN)
+        self.grid_rowconfigure(0, weight=1)
+
+        self.build_left_panel()
+        self.build_right_form()
+
+    def build_left_panel(self):
+        # Panel Kiri - Electric Blue
+        frame = ctk.CTkFrame(self, fg_color=self.colors["primary"], corner_radius=0)
+        frame.grid(row=0, column=0, sticky="nsew")
+        
+        inner = ctk.CTkFrame(frame, fg_color="transparent")
+        inner.pack(expand=True)
+
+        ctk.CTkLabel(inner, text="⚡", font=("Segoe UI", 100)).pack(pady=10)
+        ctk.CTkLabel(inner, text="MyMusic", font=("Segoe UI", 36, "bold"), text_color="white").pack()
+        ctk.CTkLabel(inner, text="Electric Edition", font=("Segoe UI", 16), text_color="#E0EFFF").pack(pady=5)
+
+    def build_right_form(self):
+        # Panel Kanan - Form PIN
+        frame = ctk.CTkFrame(self, fg_color="#FFFFFF", corner_radius=0)
+        frame.grid(row=0, column=1, sticky="nsew")
+
+        inner = ctk.CTkFrame(frame, fg_color="transparent")
+        inner.pack(expand=True, fill="x", padx=50)
+
+        ctk.CTkLabel(inner, text="Akses Cepat", font=("Segoe UI", 28, "bold"), text_color=self.colors["text_head"]).pack(pady=(0, 10))
+        ctk.CTkLabel(inner, text="Masukkan PIN Keamanan", font=("Segoe UI", 14), text_color="gray").pack(pady=(0, 30))
+
+        # Input PIN Besar (Ala ATM)
+        entry_pin = ctk.CTkEntry(
+            inner, 
+            placeholder_text="• • • •", 
+            height=60, 
+            width=200,
+            font=("Consolas", 32, "bold"), 
+            justify="center", # Teks di tengah
+            show="•",         # Masking karakter
+            textvariable=self.pin_var,
+            border_color=self.colors["primary"]
+        )
+        entry_pin.pack(pady=(0, 20))
+
+        # Tombol Masuk
+        btn_login = ctk.CTkButton(
+            inner, 
+            text="BUKA KUNCI", 
+            height=50, 
+            fg_color=self.colors["primary"], 
+            hover_color=self.colors["hover"],
+            font=("Segoe UI", 14, "bold"),
+            command=self.perform_login
+        )
+        btn_login.pack(fill="x", pady=10)
+
+        # Info PIN (Hint)
+        hint_frame = ctk.CTkFrame(inner, fg_color="#F5F9FF", corner_radius=5)
+        hint_frame.pack(fill="x", pady=20)
+        ctk.CTkLabel(hint_frame, text="🔑 Admin: 0000  |  👤 User: 9999", text_color="#555", font=("Consolas", 12)).pack(pady=10)
+
+        # Bind tombol Enter
+        entry_pin.bind("<Return>", lambda e: self.perform_login())
+        
+        # Fokus otomatis ke input
+        entry_pin.focus()
+
+    def perform_login(self):
+        pin = self.pin_var.get().strip()
+
+        # LOGIC PIN
+        if pin == "0000":
+            self.on_login("admin")
+            # messagebox.showinfo("Akses Diterima", "Mode Administrator Aktif")
+            
+        elif pin == "9999":
+            self.on_login("user")
+            
+        else:
+            # Efek getar/error visual (Simpel alert dulu)
+            messagebox.showerror("Akses Ditolak", "PIN Salah!")
+            self.pin_var.set("") # Reset input
+
+====================
+FILE: .\main.py
+====================
+# main.py
+from app import App
+
+if __name__ == "__main__":
+    App().mainloop()
+
+====================
+FILE: .\songs_store.json
+====================
+[
+  {
+    "id": 1,
+    "title": "Imagine",
+    "artist": "John Lennon",
+    "genre": "Rock",
+    "year": 1971
+  },
+  {
+    "id": 2,
+    "title": "Billie Jean",
+    "artist": "Michael Jackson",
+    "genre": "Pop",
+    "year": 1982
+  },
+  {
+    "id": 3,
+    "title": "Take Five",
+    "artist": "Dave Brubeck",
+    "genre": "Jazz",
+    "year": 1959
+  },
+  {
+    "id": 4,
+    "title": "Lose Yourself",
+    "artist": "Eminem",
+    "genre": "Hip Hop",
+    "year": 2002
+  },
+  {
+    "id": 5,
+    "title": "Back in Black",
+    "artist": "AC/DC",
+    "genre": "Rock",
+    "year": 1980
+  },
+  {
+    "id": 6,
+    "title": "Imagine",
+    "artist": "John Lennon",
+    "genre": "Blues",
+    "year": 1971
+  },
+  {
+    "id": 7,
+    "title": "Billie Jean",
+    "artist": "Michael Jackson",
+    "genre": "Hip Hop",
+    "year": 1982
+  },
+  {
+    "id": 8,
+    "title": "Like a Rolling Stone",
+    "artist": "Bob Dylan",
+    "genre": "Rock",
+    "year": 1965
+  },
+  {
+    "id": 9,
+    "title": "Bohemian Rhapsody",
+    "artist": "Queen",
+    "genre": "Rock",
+    "year": 1975
+  },
+  {
+    "id": 10,
+    "title": "Smells Like Teen Spirit",
+    "artist": "Nirvana",
+    "genre": "Pop",
+    "year": 1991
+  },
+  {
+    "id": 11,
+    "title": "What's Going On",
+    "artist": "Marvin Gaye",
+    "genre": "Electronic",
+    "year": 1971
+  },
+  {
+    "id": 12,
+    "title": "Hey Jude",
+    "artist": "The Beatles",
+    "genre": "Electronic",
+    "year": 1968
+  },
+  {
+    "id": 13,
+    "title": "Sweet Child O' Mine",
+    "artist": "Guns N' Roses",
+    "genre": "Techno",
+    "year": 1987
+  },
+  {
+    "id": 14,
+    "title": "Thriller",
+    "artist": "Michael Jackson",
+    "genre": "Techno",
+    "year": 1982
+  },
+  {
+    "id": 15,
+    "title": "Hotel California",
+    "artist": "Eagles",
+    "genre": "Pop",
+    "year": 1977
+  },
+  {
+    "id": 16,
+    "title": "Stairway to Heaven",
+    "artist": "Led Zeppelin",
+    "genre": "RnB",
+    "year": 1971
+  },
+  {
+    "id": 17,
+    "title": "Respect",
+    "artist": "Aretha Franklin",
+    "genre": "Jazz",
+    "year": 1967
+  },
+  {
+    "id": 18,
+    "title": "Good Vibrations",
+    "artist": "The Beach Boys",
+    "genre": "Dangdut",
+    "year": 1966
+  },
+  {
+    "id": 19,
+    "title": "Born to Run",
+    "artist": "Bruce Springsteen",
+    "genre": "Gospel",
+    "year": 1975
+  },
+  {
+    "id": 20,
+    "title": "Superstition",
+    "artist": "Stevie Wonder",
+    "genre": "Metal",
+    "year": 1972
+  },
+  {
+    "id": 21,
+    "title": "I Will Always Love You",
+    "artist": "Whitney Houston",
+    "genre": "Hip Hop",
+    "year": 1992
+  },
+  {
+    "id": 22,
+    "title": "Every Breath You Take",
+    "artist": "The Police",
+    "genre": "RnB",
+    "year": 1983
+  },
+  {
+    "id": 23,
+    "title": "Purple Rain",
+    "artist": "Prince",
+    "genre": "RnB",
+    "year": 1984
+  },
+  {
+    "id": 24,
+    "title": "No Woman, No Cry",
+    "artist": "Bob Marley",
+    "genre": "Rock",
+    "year": 1974
+  },
+  {
+    "id": 25,
+    "title": "One",
+    "artist": "U2",
+    "genre": "Electronic",
+    "year": 1991
+  },
+  {
+    "id": 26,
+    "title": "Yesterday",
+    "artist": "The Beatles",
+    "genre": "Gospel",
+    "year": 1965
+  },
+  {
+    "id": 27,
+    "title": "Let It Be",
+    "artist": "The Beatles",
+    "genre": "Jazz",
+    "year": 1970
+  },
+  {
+    "id": 28,
+    "title": "Paint It, Black",
+    "artist": "The Rolling Stones",
+    "genre": "Gospel",
+    "year": 1966
+  },
+  {
+    "id": 29,
+    "title": "Wonderwall",
+    "artist": "Oasis",
+    "genre": "Metal",
+    "year": 1995
+  },
+  {
+    "id": 30,
+    "title": "Shake It Off",
+    "artist": "Taylor Swift",
+    "genre": "Hip Hop",
+    "year": 2014
+  },
+  {
+    "id": 31,
+    "title": "Rolling in the Deep",
+    "artist": "Adele",
+    "genre": "Jazz",
+    "year": 2010
+  },
+  {
+    "id": 32,
+    "title": "Uptown Funk",
+    "artist": "Mark Ronson ft. Bruno Mars",
+    "genre": "Pop",
+    "year": 2014
+  },
+  {
+    "id": 33,
+    "title": "Hallelujah",
+    "artist": "Leonard Cohen",
+    "genre": "Electronic",
+    "year": 1984
+  },
+  {
+    "id": 34,
+    "title": "Creep",
+    "artist": "Radiohead",
+    "genre": "Funk",
+    "year": 1992
+  },
+  {
+    "id": 35,
+    "title": "Lose Yourself",
+    "artist": "Eminem",
+    "genre": "Rock",
+    "year": 2002
+  },
+  {
+    "id": 36,
+    "title": "Back in Black",
+    "artist": "AC/DC",
+    "genre": "Funk",
+    "year": 1980
+  },
+  {
+    "id": 37,
+    "title": "Eye of the Tiger",
+    "artist": "Survivor",
+    "genre": "Gospel",
+    "year": 1982
+  },
+  {
+    "id": 38,
+    "title": "Girls Just Want to Have Fun",
+    "artist": "Cyndi Lauper",
+    "genre": "Blues",
+    "year": 1983
+  },
+  {
+    "id": 39,
+    "title": "Viva La Vida",
+    "artist": "Coldplay",
+    "genre": "Reggae",
+    "year": 2008
+  },
+  {
+    "id": 40,
+    "title": "Clocks",
+    "artist": "Coldplay",
+    "genre": "Gospel",
+    "year": 2002
+  },
+  {
+    "id": 41,
+    "title": "Seven Nation Army",
+    "artist": "The White Stripes",
+    "genre": "Pop",
+    "year": 2003
+  },
+  {
+    "id": 42,
+    "title": "Take On Me",
+    "artist": "a-ha",
+    "genre": "Reggae",
+    "year": 1985
+  },
+  {
+    "id": 43,
+    "title": "Gangsta's Paradise",
+    "artist": "Coolio",
+    "genre": "Rock",
+    "year": 1995
+  },
+  {
+    "id": 44,
+    "title": "Toxic",
+    "artist": "Britney Spears",
+    "genre": "Electronic",
+    "year": 2003
+  },
+  {
+    "id": 45,
+    "title": "Rehab",
+    "artist": "Amy Winehouse",
+    "genre": "Electronic",
+    "year": 2006
+  },
+  {
+    "id": 46,
+    "title": "Someone Like You",
+    "artist": "Adele",
+    "genre": "Gospel",
+    "year": 2011
+  },
+  {
+    "id": 47,
+    "title": "Happy",
+    "artist": "Pharrell Williams",
+    "genre": "Blues",
+    "year": 2013
+  },
+  {
+    "id": 48,
+    "title": "Bad Guy",
+    "artist": "Billie Eilish",
+    "genre": "Gospel",
+    "year": 2019
+  },
+  {
+    "id": 49,
+    "title": "Shape of You",
+    "artist": "Ed Sheeran",
+    "genre": "Hip Hop",
+    "year": 2017
+  },
+  {
+    "id": 50,
+    "title": "Blinding Lights",
+    "artist": "The Weeknd",
+    "genre": "Techno",
+    "year": 2019
+  },
+  {
+    "id": 51,
+    "title": "Levitating",
+    "artist": "Dua Lipa",
+    "genre": "RnB",
+    "year": 2020
+  },
+  {
+    "id": 52,
+    "title": "Senorita",
+    "artist": "Shawn Mendes & Camila Cabello",
+    "genre": "Metal",
+    "year": 2019
+  },
+  {
+    "id": 53,
+    "title": "Old Town Road",
+    "artist": "Lil Nas X",
+    "genre": "Dangdut",
+    "year": 2019
+  },
+  {
+    "id": 54,
+    "title": "Shallow",
+    "artist": "Lady Gaga & Bradley Cooper",
+    "genre": "Techno",
+    "year": 2018
+  },
+  {
+    "id": 55,
+    "title": "Despacito",
+    "artist": "Luis Fonsi ft. Daddy Yankee",
+    "genre": "Hip Hop",
+    "year": 2017
+  },
+  {
+    "id": 56,
+    "title": "Thinking Out Loud",
+    "artist": "Ed Sheeran",
+    "genre": "Techno",
+    "year": 2014
+  },
+  {
+    "id": 57,
+    "title": "All of Me",
+    "artist": "John Legend",
+    "genre": "Blues",
+    "year": 2013
+  },
+  {
+    "id": 58,
+    "title": "Rolling in the Deep",
+    "artist": "Adele",
+    "genre": "Hip Hop",
+    "year": 2010
+  },
+  {
+    "id": 59,
+    "title": "Viva La Vida",
+    "artist": "Coldplay",
+    "genre": "Electronic",
+    "year": 2008
+  },
+  {
+    "id": 60,
+    "title": "Umbrella",
+    "artist": "Rihanna ft. Jay-Z",
+    "genre": "Dangdut",
+    "year": 2007
+  },
+  {
+    "id": 61,
+    "title": "Crazy",
+    "artist": "Gnarls Barkley",
+    "genre": "Blues",
+    "year": 2006
+  },
+  {
+    "id": 62,
+    "title": "Hips Don't Lie",
+    "artist": "Shakira ft. Wyclef Jean",
+    "genre": "Gospel",
+    "year": 2006
+  },
+  {
+    "id": 63,
+    "title": "Boulevard of Broken Dreams",
+    "artist": "Green Day",
+    "genre": "Blues",
+    "year": 2004
+  },
+  {
+    "id": 64,
+    "title": "Hey Ya!",
+    "artist": "OutKast",
+    "genre": "Pop",
+    "year": 2003
+  },
+  {
+    "id": 65,
+    "title": "Complicated",
+    "artist": "Avril Lavigne",
+    "genre": "Techno",
+    "year": 2002
+  },
+  {
+    "id": 66,
+    "title": "In the End",
+    "artist": "Linkin Park",
+    "genre": "Gospel",
+    "year": 2001
+  },
+  {
+    "id": 67,
+    "title": "Oops!... I Did It Again",
+    "artist": "Britney Spears",
+    "genre": "Funk",
+    "year": 2000
+  },
+  {
+    "id": 68,
+    "title": "Smooth",
+    "artist": "Santana ft. Rob Thomas",
+    "genre": "Pop",
+    "year": 1999
+  },
+  {
+    "id": 69,
+    "title": "My Heart Will Go On",
+    "artist": "Celine Dion",
+    "genre": "RnB",
+    "year": 1997
+  },
+  {
+    "id": 70,
+    "title": "Wannabe",
+    "artist": "Spice Girls",
+    "genre": "Electronic",
+    "year": 1996
+  },
+  {
+    "id": 71,
+    "title": "Waterfalls",
+    "artist": "TLC",
+    "genre": "Reggae",
+    "year": 1995
+  },
+  {
+    "id": 72,
+    "title": "Ironic",
+    "artist": "Alanis Morissette",
+    "genre": "Metal",
+    "year": 1995
+  },
+  {
+    "id": 73,
+    "title": "Zombie",
+    "artist": "The Cranberries",
+    "genre": "Reggae",
+    "year": 1994
+  },
+  {
+    "id": 74,
+    "title": "Creep",
+    "artist": "Radiohead",
+    "genre": "Techno",
+    "year": 1993
+  },
+  {
+    "id": 75,
+    "title": "November Rain",
+    "artist": "Guns N' Roses",
+    "genre": "Hip Hop",
+    "year": 1991
+  },
+  {
+    "id": 76,
+    "title": "Nothing Else Matters",
+    "artist": "Metallica",
+    "genre": "Funk",
+    "year": 1991
+  },
+  {
+    "id": 77,
+    "title": "Under the Bridge",
+    "artist": "Red Hot Chili Peppers",
+    "genre": "Dangdut",
+    "year": 1992
+  },
+  {
+    "id": 78,
+    "title": "Enter Sandman",
+    "artist": "Metallica",
+    "genre": "Jazz",
+    "year": 1991
+  },
+  {
+    "id": 79,
+    "title": "Smells Like Teen Spirit",
+    "artist": "Nirvana",
+    "genre": "Pop",
+    "year": 1991
+  },
+  {
+    "id": 80,
+    "title": "Losing My Religion",
+    "artist": "R.E.M.",
+    "genre": "Metal",
+    "year": 1991
+  },
+  {
+    "id": 81,
+    "title": "Vogue",
+    "artist": "Madonna",
+    "genre": "Metal",
+    "year": 1990
+  },
+  {
+    "id": 82,
+    "title": "Ice Ice Baby",
+    "artist": "Vanilla Ice",
+    "genre": "Rock",
+    "year": 1990
+  },
+  {
+    "id": 83,
+    "title": "Like a Prayer",
+    "artist": "Madonna",
+    "genre": "Gospel",
+    "year": 1989
+  },
+  {
+    "id": 84,
+    "title": "Sweet Child O' Mine",
+    "artist": "Guns N' Roses",
+    "genre": "Electronic",
+    "year": 1987
+  },
+  {
+    "id": 85,
+    "title": "With or Without You",
+    "artist": "U2",
+    "genre": "Dangdut",
+    "year": 1987
+  },
+  {
+    "id": 86,
+    "title": "Livin' on a Prayer",
+    "artist": "Bon Jovi",
+    "genre": "Techno",
+    "year": 1986
+  },
+  {
+    "id": 87,
+    "title": "Take On Me",
+    "artist": "a-ha",
+    "genre": "Metal",
+    "year": 1985
+  },
+  {
+    "id": 88,
+    "title": "Careless Whisper",
+    "artist": "George Michael",
+    "genre": "RnB",
+    "year": 1984
+  },
+  {
+    "id": 89,
+    "title": "Thriller",
+    "artist": "Michael Jackson",
+    "genre": "Techno",
+    "year": 1982
+  },
+  {
+    "id": 90,
+    "title": "Eye of the Tiger",
+    "artist": "Survivor",
+    "genre": "RnB",
+    "year": 1982
+  },
+  {
+    "id": 91,
+    "title": "Don't Stop Believin'",
+    "artist": "Journey",
+    "genre": "Gospel",
+    "year": 1981
+  },
+  {
+    "id": 92,
+    "title": "Another One Bites the Dust",
+    "artist": "Queen",
+    "genre": "Electronic",
+    "year": 1980
+  },
+  {
+    "id": 93,
+    "title": "Imagine",
+    "artist": "John Lennon",
+    "genre": "Techno",
+    "year": 1971
+  },
+  {
+    "id": 94,
+    "title": "Stairway to Heaven",
+    "artist": "Led Zeppelin",
+    "genre": "Reggae",
+    "year": 1971
+  },
+  {
+    "id": 95,
+    "title": "Let It Be",
+    "artist": "The Beatles",
+    "genre": "Jazz",
+    "year": 1970
+  },
+  {
+    "id": 96,
+    "title": "Bridge Over Troubled Water",
+    "artist": "Simon & Garfunkel",
+    "genre": "Gospel",
+    "year": 1970
+  },
+  {
+    "id": 97,
+    "title": "Hotel California",
+    "artist": "Eagles",
+    "genre": "Techno",
+    "year": 1977
+  },
+  {
+    "id": 98,
+    "title": "Go Your Own Way",
+    "artist": "Fleetwood Mac",
+    "genre": "Electronic",
+    "year": 1977
+  },
+  {
+    "id": 99,
+    "title": "Dancing Queen",
+    "artist": "ABBA",
+    "genre": "Gospel",
+    "year": 1976
+  },
+  {
+    "id": 100,
+    "title": "Bohemian Rhapsody",
+    "artist": "Queen",
+    "genre": "Metal",
+    "year": 1975
+  },
+  {
+    "id": 101,
+    "title": "Born to Run",
+    "artist": "Bruce Springsteen",
+    "genre": "Rock",
+    "year": 1975
+  },
+  {
+    "id": 102,
+    "title": "Superstition",
+    "artist": "Stevie Wonder",
+    "genre": "Electronic",
+    "year": 1972
+  },
+  {
+    "id": 103,
+    "title": "Lean on Me",
+    "artist": "Bill Withers",
+    "genre": "Electronic",
+    "year": 1972
+  },
+  {
+    "id": 104,
+    "title": "American Pie",
+    "artist": "Don McLean",
+    "genre": "Jazz",
+    "year": 1971
+  },
+  {
+    "id": 105,
+    "title": "Your Song",
+    "artist": "Elton John",
+    "genre": "RnB",
+    "year": 1970
+  },
+  {
+    "id": 106,
+    "title": "I Heard It Through the Grapevine",
+    "artist": "Marvin Gaye",
+    "genre": "Techno",
+    "year": 1968
+  },
+  {
+    "id": 107,
+    "title": "Sittin' On The Dock of the Bay",
+    "artist": "Otis Redding",
+    "genre": "Funk",
+    "year": 1968
+  },
+  {
+    "id": 108,
+    "title": "Respect",
+    "artist": "Aretha Franklin",
+    "genre": "Gospel",
+    "year": 1967
+  },
+  {
+    "id": 109,
+    "title": "Good Vibrations",
+    "artist": "The Beach Boys",
+    "genre": "Jazz",
+    "year": 1966
+  },
+  {
+    "id": 110,
+    "title": "Like a Rolling Stone",
+    "artist": "Bob Dylan",
+    "genre": "Metal",
+    "year": 1965
+  },
+  {
+    "id": 111,
+    "title": "My Girl",
+    "artist": "The Temptations",
+    "genre": "Reggae",
+    "year": 1964
+  },
+  {
+    "id": 112,
+    "title": "I Want to Hold Your Hand",
+    "artist": "The Beatles",
+    "genre": "Techno",
+    "year": 1963
+  },
+  {
+    "id": 113,
+    "title": "Can't Help Falling in Love",
+    "artist": "Elvis Presley",
+    "genre": "Funk",
+    "year": 1961
+  },
+  {
+    "id": 114,
+    "title": "Only You",
+    "artist": "The Platters",
+    "genre": "Electronic",
+    "year": 1955
+  },
+  {
+    "id": 115,
+    "title": "Rock Around the Clock",
+    "artist": "Bill Haley & His Comets",
+    "genre": "Dangdut",
+    "year": 1954
+  },
+  {
+    "id": 116,
+    "title": "Hound Dog",
+    "artist": "Elvis Presley",
+    "genre": "Rock",
+    "year": 1956
+  },
+  {
+    "id": 117,
+    "title": "Jailhouse Rock",
+    "artist": "Elvis Presley",
+    "genre": "Jazz",
+    "year": 1957
+  },
+  {
+    "id": 118,
+    "title": "Great Balls of Fire",
+    "artist": "Jerry Lee Lewis",
+    "genre": "Reggae",
+    "year": 1957
+  },
+  {
+    "id": 119,
+    "title": "La Bamba",
+    "artist": "Ritchie Valens",
+    "genre": "Techno",
+    "year": 1958
+  },
+  {
+    "id": 120,
+    "title": "Johnny B. Goode",
+    "artist": "Chuck Berry",
+    "genre": "Rock",
+    "year": 1958
+  },
+  {
+    "id": 121,
+    "title": "What'd I Say",
+    "artist": "Ray Charles",
+    "genre": "Reggae",
+    "year": 1959
+  },
+  {
+    "id": 122,
+    "title": "Take Five",
+    "artist": "Dave Brubeck",
+    "genre": "Electronic",
+    "year": 1959
+  }
+]
+
+====================
+FILE: .\components\bottom_player.py
+====================
+import customtkinter as ctk
+
+class BottomPlayer(ctk.CTkFrame):
+    def __init__(self, parent, colors, prev_cb, play_cb, next_cb):
+        super().__init__(parent, fg_color="#080808", height=80, corner_radius=0)
+        self.colors = colors
+        self.play_cb = play_cb
+        
+        # Grid Layout: 3 Kolom
+        self.grid_columnconfigure(0, weight=1) # Info Lagu (Kiri)
+        self.grid_columnconfigure(1, weight=0) # Kontrol (Tengah - Fixed)
+        self.grid_columnconfigure(2, weight=1) # Volume/Kosong (Kanan)
+        self.grid_rowconfigure(0, weight=1)
+
+        # 1. Info Area
+        info_frame = ctk.CTkFrame(self, fg_color="transparent")
+        info_frame.grid(row=0, column=0, sticky="w", padx=20)
+        
+        self.lbl_title = ctk.CTkLabel(info_frame, text="Ready", font=("Segoe UI", 14, "bold"), text_color="white", anchor="w", width=200)
+        self.lbl_title.pack(anchor="w")
+        self.lbl_artist = ctk.CTkLabel(info_frame, text="Select song...", font=("Segoe UI", 12), text_color="gray", anchor="w")
+        self.lbl_artist.pack(anchor="w")
+
+        # 2. Control Area (Center)
+        ctrl_frame = ctk.CTkFrame(self, fg_color="transparent")
+        ctrl_frame.grid(row=0, column=1)
+
+        btn_conf = {"fg_color": "transparent", "text_color": "white", "width": 40, "hover_color": "#333", "font": ("Arial", 18)}
+        
+        ctk.CTkButton(ctrl_frame, text="⏮", command=prev_cb, **btn_conf).pack(side="left", padx=10)
+        
+        # Tombol Play Besar Bulat
+        self.btn_play = ctk.CTkButton(ctrl_frame, text="▶", width=50, height=50, corner_radius=25,
+                                      fg_color="white", text_color="black", hover_color="#DDD",
+                                      font=("Arial", 20), command=play_cb)
+        self.btn_play.pack(side="left", padx=10)
+
+        ctk.CTkButton(ctrl_frame, text="⏭", command=next_cb, **btn_conf).pack(side="left", padx=10)
+
+        # 3. Kanan (Kosong/Spacer)
+        ctk.CTkFrame(self, fg_color="transparent").grid(row=0, column=2)
+
+    def update_state(self, song, is_playing):
+        if song:
+            # Potong judul panjang agar layout tidak rusak (manual ellipsis)
+            title = song.title
+            if len(title) > 25: title = title[:22] + "..."
+            
+            self.lbl_title.configure(text=title)
+            self.lbl_artist.configure(text=song.artist)
+            self.btn_play.configure(text="⏸" if is_playing else "▶")
+        else:
+            self.lbl_title.configure(text="MyMusic")
+            self.lbl_artist.configure(text="Pilih lagu untuk memutar")
+            self.btn_play.configure(text="▶")
+
+====================
+FILE: .\components\sidebar_admin.py
+====================
+import customtkinter as ctk
+
+# Tambahkan parameter 'colors'
+def SidebarAdmin(parent, colors, on_dashboard, on_songs, on_add, on_import):
+    # Gunakan colors["bg_sidebar"]
+    frame = ctk.CTkFrame(parent, width=240, fg_color=colors["bg_sidebar"], corner_radius=0)
+    
+    ctk.CTkLabel(frame, text="ADMIN PANEL", font=("Segoe UI", 16, "bold"), text_color=colors["primary"]).pack(pady=(30, 10), padx=20, anchor="w")
+    ctk.CTkLabel(frame, text="Manage Music", font=("Segoe UI", 12), text_color="gray").pack(pady=(0, 20), padx=20, anchor="w")
+
+    def create_admin_btn(text, icon, command):
+        btn = ctk.CTkButton(
+            frame, 
+            text=f"{icon}  {text}", 
+            anchor="w",
+            font=("Segoe UI", 13),
+            fg_color="transparent",
+            text_color="#E0E0E0",
+            hover_color=colors["hover"],
+            height=38,
+            width=210,
+            command=command
+        )
+        btn.pack(pady=2, padx=10)
+
+    create_admin_btn("Dashboard", "📊", on_dashboard)
+    create_admin_btn("Database Lagu", "💿", on_songs)
+    create_admin_btn("Tambah Baru", "➕", on_add)
+    create_admin_btn("Import CSV", "📥", on_import)
+
+    return frame
+
+====================
+FILE: .\components\sidebar_user.py
+====================
+import customtkinter as ctk
+
+# Tambahkan parameter 'colors'
+def SidebarUser(parent, colors, on_home, on_search, on_playlist):
+    # Gunakan warna dari colors["bg_sidebar"]
+    frame = ctk.CTkFrame(parent, width=240, fg_color=colors["bg_sidebar"], corner_radius=0)
+    
+    logo_frame = ctk.CTkFrame(frame, fg_color="transparent")
+    logo_frame.pack(pady=(25, 30), padx=20, anchor="w")
+    ctk.CTkLabel(logo_frame, text="🎵", font=("Segoe UI", 28)).pack(side="left")
+    ctk.CTkLabel(logo_frame, text="MyMusic", font=("Segoe UI", 22, "bold"), text_color="white").pack(side="left", padx=10)
+
+    def create_menu_btn(text, icon, command, is_active=False):
+        btn = ctk.CTkButton(
+            frame, 
+            text=f"  {icon}   {text}", 
+            anchor="w",
+            font=("Segoe UI", 14, "bold" if is_active else "normal"),
+            # Gunakan colors["primary"] jika aktif
+            fg_color=colors["primary"] if is_active else "transparent",
+            text_color="white" if is_active else "#B3B3B3",
+            hover_color=colors["hover"],
+            height=40,
+            width=200,
+            command=command
+        )
+        btn.pack(pady=2, padx=10)
+        return btn
+
+    create_menu_btn("Home", "🏠", on_home, is_active=True) 
+    create_menu_btn("Cari Lagu", "🔍", on_search)
+    create_menu_btn("Koleksi Saya", "📚", on_playlist)
+
+    ctk.CTkFrame(frame, fg_color="transparent").pack(expand=True)
+    ctk.CTkLabel(frame, text="v1.0.0 Stable", text_color="#555", font=("Arial", 10)).pack(pady=10)
+
+    return frame
+
+====================
+FILE: .\components\topbar.py
+====================
+import customtkinter as ctk
+
+def TopBar(parent, logout_callback, colors):
+    frame = ctk.CTkFrame(parent, fg_color="white", height=60, corner_radius=0)
+    
+    # Logo text kiri
+    ctk.CTkLabel(frame, text="MyMusic", font=("Segoe UI", 18, "bold"), text_color=colors["primary"]).pack(side="left", padx=20)
+
+    # Tombol Logout Kanan (Tanpa icon akun)
+    ctk.CTkButton(frame, text="Keluar", width=80, fg_color="#FFEEED", text_color="red", 
+                  hover_color="#FFDDD9", command=logout_callback).pack(side="right", padx=20, pady=10)
+
+    return frame
+
+====================
+FILE: .\logic\controller_player.py
+====================
+class PlayerController:
+    def __init__(self):
+        self.queue = []      # Daftar lagu (List biasa)
+        self.index = -1      # Posisi sekarang
+        self.is_playing = False
+
+    @property
+    def current_song(self):
+        if 0 <= self.index < len(self.queue):
+            return self.queue[self.index]
+        return None
+
+    def set_queue(self, song_list, start_index=0):
+        self.queue = song_list
+        self.index = start_index
+        self.is_playing = True
+
+    def play(self):
+        if self.queue:
+            self.is_playing = True
+
+    def pause(self):
+        self.is_playing = False
+
+    def next(self):
+        if not self.queue: return
+        if self.index < len(self.queue) - 1:
+            self.index += 1
+            self.is_playing = True
+        else:
+            # Loop ke awal atau stop (disini kita loop)
+            self.index = 0 
+            self.is_playing = True
+
+    def prev(self):
+        if not self.queue: return
+        if self.index > 0:
+            self.index -= 1
+            self.is_playing = True
+        else:
+            self.index = len(self.queue) - 1
+            self.is_playing = True
+
+====================
+FILE: .\logic\library.py
+====================
+# logic/library.py
+import json
+from pathlib import Path
+
+DATAFILE = Path(__file__).resolve().parent.parent / "songs_store.json"
+
+class Song:
+    def __init__(self, sid, title, artist, genre, year):
+        self.id = sid
+        self.title = title
+        self.artist = artist
+        self.genre = genre
+        self.year = year
+
+class NodeDLL:
+    def __init__(self, song):
+        self.song = song
+        self.prev = None
+        self.next = None
+
+class SongLibrary:
+    def __init__(self):
+        self.head = None
+        self.tail = None
+        self.auto_id = 1
+        self._load_from_file()
+
+    def _load_from_file(self):
+        if not DATAFILE.exists():
+            return
+        try:
+            with open(DATAFILE, "r", encoding="utf-8") as f:
+                arr = json.load(f)
+            # Saat load dari file, kita masukkan saja langsung (asumsi file aman)
+            for item in arr:
+                self._insert_node(item.get("title",""), item.get("artist",""), item.get("genre",""), int(item.get("year",0)))
+        except Exception:
+            pass
+
+    def save_if_supported(self):
+        arr = []
+        cur = self.head
+        while cur:
+            s = cur.song
+            arr.append({"id": s.id, "title": s.title, "artist": s.artist, "genre": s.genre, "year": s.year})
+            cur = cur.next
+        with open(DATAFILE, "w", encoding="utf-8") as f:
+            json.dump(arr, f, indent=2, ensure_ascii=False)
+
+    # --- FUNGSI CEK DUPLIKAT ---
+    def is_duplicate(self, title, artist):
+        cur = self.head
+        # Bersihkan spasi dan jadikan huruf kecil semua agar akurat
+        t_check = title.strip().lower()
+        a_check = artist.strip().lower()
+        
+        while cur:
+            current_t = cur.song.title.strip().lower()
+            current_a = cur.song.artist.strip().lower()
+            
+            if current_t == t_check and current_a == a_check:
+                return True
+            cur = cur.next
+        return False
+
+    def _insert_node(self, title, artist, genre, year):
+        song = Song(self.auto_id, title, artist, genre, year)
+        self.auto_id += 1
+        node = NodeDLL(song)
+        if self.head is None:
+            self.head = self.tail = node
+        else:
+            self.tail.next = node
+            node.prev = self.tail
+            self.tail = node
+        return song
+
+    def addSong(self, title, artist, genre, year):
+        # 1. Cek Duplikat Sebelum Menambah
+        if self.is_duplicate(title, artist):
+            return None # Return None tanda gagal/duplikat
+
+        # 2. Jika aman, tambahkan
+        return self._insert_node(title, artist, genre, year)
+
+    def findNodeById(self, sid):
+        cur = self.head
+        while cur:
+            if cur.song.id == sid:
+                return cur
+            cur = cur.next
+        return None
+
+    def updateSong(self, sid, t, a, g, y):
+        n = self.findNodeById(sid)
+        if not n: return False
+        n.song.title = t
+        n.song.artist = a
+        n.song.genre = g
+        n.song.year = y
+        return True
+
+    def deleteSong(self, sid):
+        cur = self.head
+        while cur:
+            if cur.song.id == sid:
+                if cur.prev: cur.prev.next = cur.next
+                else: self.head = cur.next
+                if cur.next: cur.next.prev = cur.prev
+                else: self.tail = cur.prev
+                self.reindex()
+                return True
+            cur = cur.next
+        return False
+
+    def reindex(self):
+        cur = self.head
+        idx = 1
+        while cur:
+            cur.song.id = idx
+            idx += 1
+            cur = cur.next
+        self.auto_id = idx
+
+    def getAllSongs(self):
+        arr = []
+        cur = self.head
+        while cur:
+            arr.append(cur.song)
+            cur = cur.next
+        return arr
+
+    def load_sample_if_empty(self):
+        if not self.getAllSongs():
+            # Data sampel (beberapa dibuat mirip untuk tes)
+            self.addSong("Imagine", "John Lennon", "Rock", 1971)
+            self.addSong("Billie Jean", "Michael Jackson", "Pop", 1982)
+            self.addSong("Take Five", "Dave Brubeck", "Jazz", 1959)
+
+====================
+FILE: .\logic\playlist.py
+====================
+# logic/playlist.py
+class PlaylistNode:
+    def __init__(self, song):
+        self.song = song
+        self.prev = None
+        self.next = None
+
+class Playlist:
+    def __init__(self, name="My Playlist"):
+        self.name = name
+        self.head = None
+        self.tail = None
+        self.current = None
+
+    def contains(self, song_id):
+        cur = self.head
+        while cur:
+            if cur.song.id == song_id:
+                return True
+            cur = cur.next
+        return False
+
+    def addSong(self, song):
+        # UNIK: Cek jika sudah ada
+        if self.contains(song.id):
+            return False 
+            
+        node = PlaylistNode(song)
+        if not self.head:
+            self.head = self.tail = node
+            return True
+        
+        self.tail.next = node
+        node.prev = self.tail
+        self.tail = node
+        return True
+
+    def listSongs(self):
+        arr = []
+        cur = self.head
+        while cur:
+            arr.append(cur.song)
+            cur = cur.next
+        return arr
+
+    def removeSong(self, sid):
+        cur = self.head
+        while cur:
+            if cur.song.id == sid:
+                if self.current is cur:
+                    if cur.next: self.current = cur.next
+                    elif cur.prev: self.current = cur.prev
+                    else: self.current = None
+                
+                if cur.prev: cur.prev.next = cur.next
+                else: self.head = cur.next
+                
+                if cur.next: cur.next.prev = cur.prev
+                else: self.tail = cur.prev
+                return True
+            cur = cur.next
+        return False
+
+====================
+FILE: .\pages_admin\add_song.py
+====================
+import customtkinter as ctk
+from tkinter import messagebox, StringVar
+
+def render_add_song(parent, library, colors, on_saved):
+    ctk.CTkLabel(parent, text="Tambah Lagu Baru", font=("Segoe UI", 20, "bold"), text_color=colors["text_head"]).pack(pady=15)
+    
+    form = ctk.CTkFrame(parent, fg_color="white")
+    form.pack(pady=10, padx=40, fill="x")
+
+    vars = {
+        "Judul": StringVar(), "Artist": StringVar(), "Genre": StringVar(), "Tahun": StringVar()
+    }
+    
+    fields = ["Judul", "Artist", "Genre", "Tahun"]
+    for i, f in enumerate(fields):
+        ctk.CTkLabel(form, text=f, text_color="#333").grid(row=i, column=0, padx=20, pady=10, sticky="w")
+        ctk.CTkEntry(form, textvariable=vars[f], width=300).grid(row=i, column=1, padx=20, pady=10)
+
+    lbl_stat = ctk.CTkLabel(form, text="", text_color="gray", font=("Arial", 10))
+    lbl_stat.grid(row=4, column=1, sticky="w", padx=20)
+
+    def on_type(*args):
+        try: lbl_stat.configure(text="Mengetik...", text_color="gray")
+        except: pass
+
+    for v in vars.values(): v.trace_add("write", on_type)
+
+    def save():
+        try:
+            data = {k: v.get().strip() for k, v in vars.items()}
+            if any(not x for x in data.values()):
+                messagebox.showerror("Error", "Semua kolom harus diisi!")
+                return
+            
+            # Panggil addSong
+            result = library.addSong(data["Judul"], data["Artist"], data["Genre"], int(data["Tahun"]))
+            
+            # --- CEK HASILNYA ---
+            if result is None:
+                messagebox.showerror("Gagal", f"Lagu '{data['Judul']}' sudah ada!")
+                lbl_stat.configure(text="Gagal: Duplikat data ditemukan.", text_color="red")
+                return
+
+            messagebox.showinfo("Sukses", "Lagu disimpan.")
+            on_saved()
+            
+        except ValueError:
+            messagebox.showerror("Error", "Tahun harus angka!")
+        except Exception as e:
+            print(f"Error: {e}")
+
+    ctk.CTkButton(parent, text="SIMPAN", fg_color=colors["primary"], width=200, height=40, command=save).pack(pady=20)
+
+====================
+FILE: .\pages_admin\dashboard.py
+====================
+import customtkinter as ctk
+
+def render_dashboard(parent, library, colors):
+    # Header
+    ctk.CTkLabel(parent, text="Dashboard Admin", font=("Segoe UI", 24, "bold"), text_color=colors["text_head"]).pack(pady=20, padx=20, anchor="w")
+
+    all_songs = library.getAllSongs()
+    total_songs = len(all_songs)
+    genres = set(s.genre for s in all_songs)
+    artists = set(s.artist for s in all_songs)
+
+    # Container Kartu
+    cards_frame = ctk.CTkFrame(parent, fg_color="transparent")
+    cards_frame.pack(fill="x", padx=15)
+    
+    # Helper membuat kartu
+    def make_card(parent, title, value, color, icon):
+        card = ctk.CTkFrame(parent, fg_color=color, corner_radius=10)
+        card.pack(side="left", fill="both", expand=True, padx=5)
+        
+        ctk.CTkLabel(card, text=icon, font=("Segoe UI", 30)).pack(pady=(15,0))
+        ctk.CTkLabel(card, text=str(value), font=("Segoe UI", 32, "bold"), text_color="white").pack()
+        ctk.CTkLabel(card, text=title, font=("Segoe UI", 14), text_color="#EFEFEF").pack(pady=(0,15))
+
+    # Baris 1: Statistik
+    # Menggunakan warna dari palette atau hardcoded yang sesuai tema
+    make_card(cards_frame, "Total Lagu", total_songs, colors["primary"], "🎵") 
+    make_card(cards_frame, "Total Genre", len(genres), "#28A745", "🎷") 
+    make_card(cards_frame, "Total Artis", len(artists), "#6F42C1", "🎤") 
+
+    # Baris 2: Quick Actions
+    ctk.CTkLabel(parent, text="Aksi Cepat", font=("Segoe UI", 16, "bold"), text_color="#555").pack(pady=(30,10), padx=20, anchor="w")
+    
+    action_frame = ctk.CTkFrame(parent, fg_color="white", corner_radius=10)
+    action_frame.pack(fill="x", padx=20)
+
+    ctk.CTkButton(action_frame, text="Backup Data JSON", fg_color="#6C757D", command=lambda: print("Backup...")).pack(side="left", padx=10, pady=20)
+    ctk.CTkButton(action_frame, text="Reset Player Cache", fg_color=colors["danger"], command=lambda: print("Reset...")).pack(side="left", padx=10, pady=20)
+
+====================
+FILE: .\pages_admin\delete_song.py
+====================
+import customtkinter as ctk
+from tkinter import messagebox
+
+# Tambah parameter colors
+def render_delete_song(parent, library, colors, song_id, on_deleted):
+    node = library.findNodeById(song_id)
+    if not node:
+        ctk.CTkLabel(parent, text="Lagu tidak ditemukan", text_color=colors["text_head"]).pack(pady=12)
+        return
+    s = node.song
+    ctk.CTkLabel(parent, text=f"Hapus Lagu: {s.title} - {s.artist}", font=("Segoe UI", 18, "bold"), text_color=colors["text_head"]).pack(pady=12)
+    
+    def do_delete():
+        if messagebox.askyesno("Konfirmasi", "Yakin hapus lagu ini?"):
+            library.deleteSong(song_id)
+            messagebox.showinfo("OK", "Lagu dihapus.")
+            if on_deleted:
+                on_deleted()
+
+    # Gunakan colors["danger"] (merah) yang ada di app.py
+    ctk.CTkButton(parent, text="Hapus Sekarang", fg_color=colors["danger"], hover_color="#FF4C4C", command=do_delete).pack(pady=8)
+
+====================
+FILE: .\pages_admin\edit_song.py
+====================
+import customtkinter as ctk
+from tkinter import messagebox
+
+# Tambah parameter colors
+def render_edit_song(parent, library, colors, song_id, on_saved):
+    node = library.findNodeById(song_id)
+    if not node:
+        ctk.CTkLabel(parent, text="Lagu tidak ditemukan", text_color=colors["text_head"]).pack(pady=12)
+        return
+    s = node.song
+    ctk.CTkLabel(parent, text=f"Edit Lagu ID {song_id}", font=("Segoe UI", 20, "bold"), text_color=colors["text_head"]).pack(pady=8)
+    
+    form = ctk.CTkFrame(parent, fg_color="white")
+    form.pack(pady=10, padx=12, fill="x")
+    
+    labels = ["Judul", "Artist", "Genre", "Tahun"]
+    entries = {}
+    initial = [s.title, s.artist, s.genre, s.year]
+    
+    for i, lbl in enumerate(labels):
+        ctk.CTkLabel(form, text=lbl).grid(row=i, column=0, pady=8, padx=8, sticky="w")
+        entries[lbl] = ctk.CTkEntry(form, width=360)
+        entries[lbl].insert(0, str(initial[i]))
+        entries[lbl].grid(row=i, column=1, pady=8, padx=8)
+        
+    def save():
+        t = entries["Judul"].get().strip()
+        a = entries["Artist"].get().strip()
+        g = entries["Genre"].get().strip()
+        y = entries["Tahun"].get().strip()
+        try:
+            y = int(y)
+        except:
+            messagebox.showerror("Error", "Tahun salah!")
+            return
+        library.updateSong(song_id, t, a, g, y)
+        messagebox.showinfo("OK", "Berhasil diupdate!")
+        if on_saved:
+            on_saved()
+
+    # Gunakan warna primary
+    ctk.CTkButton(parent, text="Simpan Perubahan", fg_color=colors["primary"], hover_color=colors["hover"], command=save).pack(pady=10)
+
+====================
+FILE: .\pages_admin\import_csv.py
+====================
+import customtkinter as ctk
+from tkinter import filedialog, messagebox
+import csv
+
+def render_import_csv(parent, library, colors, on_finished):
+    ctk.CTkLabel(parent, text="Import CSV", font=("Segoe UI", 20, "bold"), text_color=colors["text_head"]).pack(pady=15)
+    
+    # State untuk menyimpan data preview
+    preview_data = []
+
+    info_frame = ctk.CTkFrame(parent, fg_color="white")
+    info_frame.pack(fill="x", padx=20, pady=10)
+    ctk.CTkLabel(info_frame, text="Pilih file CSV", text_color="gray").pack(pady=10)
+
+    # Area Preview
+    preview_scroll = ctk.CTkScrollableFrame(parent, fg_color="#EEE", height=300)
+    preview_scroll.pack(fill="both", expand=True, padx=20, pady=10)
+    
+    # Label placeholder
+    lbl_ph = ctk.CTkLabel(preview_scroll, text="Belum ada file dipilih.", text_color="gray")
+    lbl_ph.pack(pady=20)
+
+    def load_preview():
+        nonlocal preview_data
+        path = filedialog.askopenfilename(filetypes=[("CSV", "*.csv")])
+        if not path: return
+
+        try:
+            data = []
+            with open(path, "r", encoding="utf-8") as f:
+                reader = csv.reader(f)
+                next(reader, None) # Skip header
+                for row in reader:
+                    if len(row) >= 4:
+                        data.append(row)
+            
+            if not data:
+                messagebox.showwarning("Kosong", "File CSV kosong atau format salah.")
+                return
+
+            preview_data = data
+            
+            # Render Preview
+            for w in preview_scroll.winfo_children(): w.destroy()
+            ctk.CTkLabel(preview_scroll, text=f"Preview: {len(data)} baris ditemukan.", font=("Arial", 12, "bold")).pack(anchor="w", pady=5)
+
+            for row in data[:]: # Tampilkan max 10 baris
+                ctk.CTkLabel(preview_scroll, text=f"{row[0]} - {row[1]} ({row[3]})", anchor="w").pack(fill="x", padx=5)
+            
+            btn_confirm.configure(state="normal", fg_color=colors["primary"]) # Enable button
+
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
+
+    def do_import():
+        count = 0
+        for row in preview_data:
+            try:
+                t, a, g, y = row[0], row[1], row[2], int(row[3])
+                library.addSong(t, a, g, y)
+                count += 1
+            except: pass
+        
+        messagebox.showinfo("Sukses", f"Berhasil import {count} lagu!")
+        on_finished()
+
+    # Tombol Kontrol
+    btn_box = ctk.CTkFrame(parent, fg_color="transparent")
+    btn_box.pack(pady=20)
+
+    ctk.CTkButton(btn_box, text="Pilih File CSV", command=load_preview, fg_color="#555").pack(side="left", padx=10)
+    
+    btn_confirm = ctk.CTkButton(btn_box, text="Konfirmasi Import", command=do_import, state="disabled", fg_color="gray")
+    btn_confirm.pack(side="left", padx=10)
+
+
+    
+            # if len(data) > 10:
+            #      ctk.CTkLabel(preview_scroll, text="... dan lainnya ...", text_color="gray").pack()
+
+====================
+FILE: .\pages_admin\songs_list.py
+====================
+import customtkinter as ctk
+
+def render_songs_list(parent, library, colors, on_edit, on_delete):
+    ctk.CTkLabel(parent, text="Database Lagu", font=("Segoe UI", 20, "bold"), text_color=colors["text_head"]).pack(pady=10, padx=20, anchor="w")
+
+    # --- GRID CONFIGURATION ---
+    # Bobot kolom harus SAMA PERSIS antara Header dan Isi
+    def apply_grid_config(frame):
+        frame.grid_columnconfigure(0, weight=1) # ID
+        frame.grid_columnconfigure(1, weight=4) # Judul (Paling Lebar)
+        frame.grid_columnconfigure(2, weight=3) # Artis
+        frame.grid_columnconfigure(3, weight=2) # Genre
+        frame.grid_columnconfigure(4, weight=1) # Tahun
+        frame.grid_columnconfigure(5, weight=2) # Aksi
+
+    # --- HEADER ---
+    header = ctk.CTkFrame(parent, fg_color="#E0E0E0", height=40, corner_radius=5)
+    header.pack(fill="x", padx=15)
+    apply_grid_config(header) 
+    
+    h_font = ("Arial", 11, "bold")
+    ctk.CTkLabel(header, text="ID", font=h_font).grid(row=0, column=0, pady=10)
+    ctk.CTkLabel(header, text="JUDUL", font=h_font, anchor="w").grid(row=0, column=1, pady=10, padx=5, sticky="ew")
+    ctk.CTkLabel(header, text="ARTIS", font=h_font, anchor="w").grid(row=0, column=2, pady=10, padx=5, sticky="ew")
+    ctk.CTkLabel(header, text="GENRE", font=h_font, anchor="w").grid(row=0, column=3, pady=10, padx=5, sticky="ew")
+    ctk.CTkLabel(header, text="THN", font=h_font).grid(row=0, column=4, pady=10)
+    ctk.CTkLabel(header, text="AKSI", font=h_font).grid(row=0, column=5, pady=10)
+
+    # --- LIST DATA ---
+    scroll = ctk.CTkScrollableFrame(parent, fg_color="transparent")
+    scroll.pack(fill="both", expand=True, padx=15, pady=5)
+
+    songs = library.getAllSongs()
+
+    # FUNGSI PEMOTONG TEKS (Agar kolom tidak melar)
+    def limit_text(txt, max_len):
+        s = str(txt)
+        if len(s) > max_len:
+            return s[:max_len-3] + "..."
+        return s
+
+    if not songs:
+        ctk.CTkLabel(scroll, text="Belum ada data lagu.", text_color="gray").pack(pady=20)
+
+    for s in songs:
+        row = ctk.CTkFrame(scroll, fg_color="white", corner_radius=5)
+        row.pack(fill="x", pady=2)
+        apply_grid_config(row) # Terapkan bobot kolom yang sama
+
+        # Render dengan limit text
+        ctk.CTkLabel(row, text=str(s.id), text_color="gray").grid(row=0, column=0, pady=8)
+        
+        # Limit Judul 30 karakter, Artis 20 karakter
+        ctk.CTkLabel(row, text=limit_text(s.title, 30), text_color="#333", anchor="w").grid(row=0, column=1, pady=8, padx=5, sticky="ew")
+        ctk.CTkLabel(row, text=limit_text(s.artist, 20), text_color="gray", anchor="w").grid(row=0, column=2, pady=8, padx=5, sticky="ew")
+        ctk.CTkLabel(row, text=limit_text(s.genre, 12), text_color="gray", anchor="w").grid(row=0, column=3, pady=8, padx=5, sticky="ew")
+        
+        ctk.CTkLabel(row, text=str(s.year), text_color="gray").grid(row=0, column=4, pady=8)
+
+        # Tombol Aksi
+        act_frame = ctk.CTkFrame(row, fg_color="transparent")
+        act_frame.grid(row=0, column=5, pady=5)
+        
+        ctk.CTkButton(act_frame, text="Edit", width=40, height=24, fg_color=colors["primary"], font=("Arial", 10),
+                      command=lambda sid=s.id: on_edit(sid)).pack(side="left", padx=2)
+        ctk.CTkButton(act_frame, text="Hapus", width=40, height=24, fg_color="#FFEEEE", text_color="red", hover_color="#FFDDDD", font=("Arial", 10),
+                      command=lambda sid=s.id: on_delete(sid)).pack(side="left", padx=2)
+
+====================
+FILE: .\pages_user\home_user.py
+====================
+import customtkinter as ctk
+import random
+
+def render_home(parent, library, colors, on_play_context):
+    scroll = ctk.CTkScrollableFrame(parent, fg_color="transparent")
+    scroll.pack(fill="both", expand=True)
+
+    # Banner
+    banner = ctk.CTkFrame(scroll, fg_color=colors["primary"], corner_radius=10)
+    banner.pack(fill="x", padx=15, pady=15)
+    ctk.CTkLabel(banner, text="Trending Hits ⚡", font=("Segoe UI", 24, "bold"), text_color="white").pack(padx=20, pady=(20,5), anchor="w")
+    ctk.CTkLabel(banner, text="Lagu paling hits minggu ini khusus buat kamu.", text_color="#E0EFFF").pack(padx=20, pady=(0,20), anchor="w")
+
+    all_songs = library.getAllSongs()
+    # Kita ambil sampel 8 lagu untuk Home
+    display_songs = all_songs[:8] if len(all_songs) > 8 else all_songs
+
+    # GRID LAGU
+    grid_frame = ctk.CTkFrame(scroll, fg_color="transparent")
+    grid_frame.pack(fill="x", padx=10)
+
+    # Grid 4 Kolom
+    for i in range(4): grid_frame.grid_columnconfigure(i, weight=1)
+
+    for i, s in enumerate(display_songs):
+        # Hitung baris dan kolom
+        r = i // 4
+        c = i % 4
+        
+        card = ctk.CTkFrame(grid_frame, fg_color="white", corner_radius=10)
+        card.grid(row=r, column=c, padx=5, pady=5, sticky="nsew")
+        
+        # Judul & Artis
+        ctk.CTkLabel(card, text=s.title, font=("Segoe UI", 14, "bold"), text_color="#333", wraplength=120).pack(pady=(15,0))
+        ctk.CTkLabel(card, text=s.artist, font=("Segoe UI", 12), text_color="gray").pack(pady=(0,15))
+        
+        # Click Play Context
+        # Kita kirim seluruh display_songs sebagai antrean, dan index i sebagai start
+        def play_cmd(idx=i):
+            on_play_context(display_songs, idx)
+        
+        # Button Play di Card
+        ctk.CTkButton(card, text="▶ Play", fg_color=colors["primary"], height=30, width=80, command=play_cmd).pack(pady=(0,15))
+
+    ctk.CTkLabel(scroll, text="Jelajahi lebih banyak di menu Search 🔍", text_color="gray").pack(pady=30)
+
+====================
+FILE: .\pages_user\playlist_user.py
+====================
+import customtkinter as ctk
+
+def render_playlist(parent, playlist, colors, on_play_context, on_remove):
+    ctk.CTkLabel(parent, text="Koleksi Saya", font=("Segoe UI", 22, "bold"), text_color=colors["text_head"]).pack(pady=15, padx=20, anchor="w")
+
+    scroll = ctk.CTkScrollableFrame(parent, fg_color="transparent")
+    scroll.pack(fill="both", expand=True, padx=15, pady=(0,15))
+
+    songs = playlist.listSongs()
+    if not songs:
+        ctk.CTkLabel(scroll, text="Playlist kosong.", text_color="gray").pack(pady=20)
+        return
+
+    for i, s in enumerate(songs, start=1):
+        row = ctk.CTkFrame(scroll, fg_color="white", corner_radius=8)
+        row.pack(fill="x", pady=4)
+
+        ctk.CTkLabel(row, text=str(i), width=30, text_color="gray").pack(side="left", padx=10)
+        
+        # Info
+        ctk.CTkLabel(row, text=s.title, font=("Segoe UI", 14, "bold"), text_color="#333", width=200, anchor="w").pack(side="left", padx=5)
+        ctk.CTkLabel(row, text=s.artist, text_color="gray").pack(side="left", padx=5)
+
+        # Tombol Hapus (Merah Teks)
+        ctk.CTkButton(row, text="Hapus", width=70, height=28, fg_color="#FFEEEE", text_color="red", 
+                      hover_color="#FFDDDD", command=lambda sid=s.id: on_remove(sid)).pack(side="right", padx=10, pady=8)
+
+        # Play Button (Blue)
+        ctk.CTkButton(row, text="Putar", width=70, height=28, fg_color=colors["primary"], 
+                      command=lambda sid=s.id: on_play_context(sid)).pack(side="right", padx=5)
+
+====================
+FILE: .\pages_user\search_user.py
+====================
+import customtkinter as ctk
+import random
+
+def render_search(parent, library, colors, on_play_context, on_add):
+    # Header Input
+    head = ctk.CTkFrame(parent, fg_color="white", corner_radius=0)
+    head.pack(fill="x", pady=(0,10))
+    
+    entry_var = ctk.StringVar()
+    entry = ctk.CTkEntry(head, textvariable=entry_var, placeholder_text="Cari judul lagu...", width=300, height=40)
+    entry.pack(side="left", padx=20, pady=15)
+
+    btn_search = ctk.CTkButton(head, text="Cari", width=100, height=40, fg_color=colors["primary"], hover_color=colors["hover"])
+    btn_search.pack(side="left", pady=15)
+
+    # Content
+    content_scroll = ctk.CTkScrollableFrame(parent, fg_color="transparent")
+    content_scroll.pack(fill="both", expand=True, padx=15, pady=(0,15))
+
+    def show_list(songs_list, title="Hasil Pencarian"):
+        for w in content_scroll.winfo_children(): w.destroy()
+        
+        ctk.CTkLabel(content_scroll, text=title, font=("Segoe UI", 16, "bold"), text_color=colors["text_head"]).pack(anchor="w", pady=(10,10))
+
+        if not songs_list:
+            ctk.CTkLabel(content_scroll, text="Tidak ditemukan.", text_color="gray").pack()
+            return
+
+        for i, s in enumerate(songs_list):
+            row = ctk.CTkFrame(content_scroll, fg_color="white")
+            row.pack(fill="x", pady=4)
+            
+            # Play saat klik row (Kirim konteks list ini)
+            def play_this(idx=i):
+                on_play_context(songs_list, idx)
+
+            btn_play = ctk.CTkButton(row, text="▶", width=40, fg_color="transparent", text_color=colors["primary"], 
+                                     hover_color="#E0EFFF", command=play_this)
+            btn_play.pack(side="left", padx=5)
+
+            ctk.CTkLabel(row, text=s.title, font=("Segoe UI", 14, "bold"), text_color="#333", width=250, anchor="w").pack(side="left", padx=5)
+            ctk.CTkLabel(row, text=s.artist, text_color="gray").pack(side="left", padx=10)
+            
+            # Tombol Tambah ke Playlist
+            ctk.CTkButton(row, text="+ Koleksi", width=80, fg_color=colors["hover"], height=30,
+                          command=lambda sid=s.id: on_add(sid)).pack(side="right", padx=10, pady=5)
+
+    # Default View (Trending)
+    all_songs = library.getAllSongs()
+    trending = random.sample(all_songs, min(5, len(all_songs))) if all_songs else []
+    show_list(trending, "🔥 Sedang Banyak Dicari")
+
+    def perform_search():
+        q = entry_var.get().lower().strip()
+        if not q:
+            show_list(trending, "🔥 Sedang Banyak Dicari")
+            return
+        
+        # Search title only
+        res = [s for s in all_songs if q in s.title.lower()]
+        show_list(res, f"Hasil pencarian: '{q}'")
+
+    btn_search.configure(command=perform_search)
+    entry.bind("<Return>", lambda e: perform_search())
