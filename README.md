@@ -127,6 +127,7 @@ Mudah diimplementasikan dan fleksibel
     b. Memudahkan proses backup dan restore data
     
 #### 6. Struktur Data Doubly linked list
+#### Cara Kerja:
     a. Setiap lagu disimpan dalam sebuah Node
     b. Setiap Node memiliki pointer prev dan next
     c. Memungkinkan navigasi dua arah (maju ke lagu berikutnya atau mundur ke lagu sebelumnya) dengan efisien
@@ -136,6 +137,7 @@ Mudah diimplementasikan dan fleksibel
     b. Operasi penyisipan (insert) dan penghapusan (delete) node dilakukan dengan memutus dan menyambung pointer antar node
 
 #### 7. Algoritma Fuzzy Search
+#### Cara Kerja:
     a. Menggunakan algoritma Levenshtein Distance untuk menghitung jarak perbedaan antara dua string
     b. Menghitung jumlah operasi minimum (penyisipan, penghapusan, atau penggantian karakter) yang diperlukan untuk mengubah kata kunci pencarian menjadi judul/artis lagu
 
@@ -144,6 +146,7 @@ Mudah diimplementasikan dan fleksibel
     b. Jika pengguna mengetik "Imagin", sistem tetap dapat menemukan lagu "Imagine" karena jarak editnya kecil
 
 #### 8. Struktur Data Queue dan Stack (Playlist & History)
+#### Cara Kerja:
     a. Queue (Antrean) Digunakan pada PlayerController untuk menyimpan daftar lagu yang akan diputar selanjutnya (next)
     b. Stack (Tumpukan): Digunakan untuk fitur History
 
@@ -152,6 +155,7 @@ Mudah diimplementasikan dan fleksibel
     b. Variabel self.history berfungsi mencatat jejak lagu untuk navigasi mundur
 
 #### 9. Algoritma Pengurutan (Sorting)
+#### Cara Kerja:
     a. Mengambil seluruh node dari Linked List
     b. Membandingkan atribut tertentu (key) antar elemen
     c. Menyusun ulang urutan elemen berdasarkan abjad atau angka
@@ -161,6 +165,7 @@ Mudah diimplementasikan dan fleksibel
     b. Menggunakan Timsort (algoritma sorting bawaan Python yang sangat efisien, gabungan Merge Sort dan Insertion Sort)
 
 #### 10. Algoritma Fisher-Yates Shuffle (Pengacakan Lagu)
+#### Cara Kerja:
     a. Algoritma membuat permutasi acak dari daftar lagu yang ada di antrean (queue)
     b. Memastikan setiap lagu memiliki peluang yang sama untuk muncul di urutan mana pun.
 
