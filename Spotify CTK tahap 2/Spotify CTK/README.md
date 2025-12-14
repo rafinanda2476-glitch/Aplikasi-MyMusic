@@ -10,9 +10,9 @@ Berisi widget atau elemen antarmuka (UI) yang lebih kecil dan dapat digunakan ke
 
 ### logic
 Berisi semua logika backend yang terpisah dari GUI. Ini bisa mencakup modul untuk:
-a. Pemrosesan file lagu (.csv atau .json)
-b. Kontrol pemutaran musik (fungsi Play/Pause/Stop)
-c. Interaksi database atau API (walaupun API utamanya di Tahap 3).
+  a. Pemrosesan file lagu (.csv atau .json) 
+  b. Kontrol pemutaran musik (fungsi Play/Pause/Stop)
+  c. Interaksi database atau API (walaupun API utamanya di Tahap 3).
 
 ### pages_admin
 Berisi file Python untuk halaman/tampilan yang hanya dapat diakses oleh administrator (jika ada). Ini menunjukkan niat untuk membedakan hak akses di masa depan.
