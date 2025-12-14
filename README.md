@@ -125,4 +125,48 @@ Mudah diimplementasikan dan fleksibel
 #### Implementasi:
     a. Menggunakan serialisasi JSON
     b. Memudahkan proses backup dan restore data
+    
+#### 6. Struktur Data Doubly linked list
+    a. Setiap lagu disimpan dalam sebuah Node
+    b. Setiap Node memiliki pointer prev dan next
+    c. Memungkinkan navigasi dua arah (maju ke lagu berikutnya atau mundur ke lagu sebelumnya) dengan efisien
+
+#### Implementasi:
+    a. Digunakan pada Class SongLibrary dan Playlist untuk manajemen urutan lagu
+    b. Operasi penyisipan (insert) dan penghapusan (delete) node dilakukan dengan memutus dan menyambung pointer antar node
+
+#### 7. Algoritma Fuzzy Search
+    a. Menggunakan algoritma Levenshtein Distance untuk menghitung jarak perbedaan antara dua string
+    b. Menghitung jumlah operasi minimum (penyisipan, penghapusan, atau penggantian karakter) yang diperlukan untuk mengubah kata kunci pencarian menjadi judul/artis lagu
+
+#### Implementasi:
+    a. Terdapat pada modul fuzzy_search.py
+    b. Jika pengguna mengetik "Imagin", sistem tetap dapat menemukan lagu "Imagine" karena jarak editnya kecil
+
+#### 8. Struktur Data Queue dan Stack (Playlist & History)
+    a. Queue (Antrean) Digunakan pada PlayerController untuk menyimpan daftar lagu yang akan diputar selanjutnya (next)
+    b. Stack (Tumpukan): Digunakan untuk fitur History
+
+#### Implementasi:
+    a. Variabel self.queue pada controller_player.py berfungsi sebagai antrean lagu yang sedang aktif
+    b. Variabel self.history berfungsi mencatat jejak lagu untuk navigasi mundur
+
+#### 9. Algoritma Pengurutan (Sorting)
+    a. Mengambil seluruh node dari Linked List
+    b. Membandingkan atribut tertentu (key) antar elemen
+    c. Menyusun ulang urutan elemen berdasarkan abjad atau angka
+    
+#### Implementasi:
+    a. Fungsi getSortedSongs pada library.py
+    b. Menggunakan Timsort (algoritma sorting bawaan Python yang sangat efisien, gabungan Merge Sort dan Insertion Sort)
+
+#### 10. Algoritma Fisher-Yates Shuffle (Pengacakan Lagu)
+    a. Algoritma membuat permutasi acak dari daftar lagu yang ada di antrean (queue)
+    b. Memastikan setiap lagu memiliki peluang yang sama untuk muncul di urutan mana pun.
+
+#### Implementasi:
+    a. Fungsi toggleShuffle pada controller_player.py
+    b. Memanfaatkan modul random untuk mengacak indeks antrean pemutaran
+
+    
 
