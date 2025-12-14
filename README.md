@@ -4,7 +4,7 @@
 
 Tujuan dari pengembangan aplikasi Spotify CTK ini adalah untuk merancang dan mengimplementasikan sebuah aplikasi pemutar musik berbasis desktop menggunakan bahasa pemrograman Python dengan antarmuka grafis CustomTkinter. Aplikasi ini bertujuan untuk membantu pengguna dalam mengelola, memutar, dan mengorganisir koleksi lagu secara terstruktur dan efisien.
 
-## Fitur Program
+## B. Fitur Program
 Ada 2 cara masuk akses diaplikasi MyMusic. Ada admin dan user:
 
 Akses bagian Admin:
@@ -16,7 +16,7 @@ Halaman Dashboard Admin menampilkan ringkasan informasi utama dari database musi
     b. Total Genre: jumlah genre musik yang tersedia
     c. Total Artis: jumlah artis yang tercatat
 
-#### Database Lagu
+### 2. Database Lagu
 Fitur Database Lagu berfungsi untuk menampilkan seluruh data lagu dalam bentuk tabel yang rapi dan mudah dibaca. Informasi yang ditampilkan meliputi:
 
     a. Judul lagu
@@ -31,4 +31,98 @@ Fitur Database Lagu berfungsi untuk menampilkan seluruh data lagu dalam bentuk t
     c. Aksi Edit untuk mengubah data lagu
     d. Aksi Hapus untuk menghapus lagu dari database
 
+### 3. Tambah Lagu Baru
+Menu Tambah Baru digunakan untuk menambahkan data lagu secara manual ke dalam sistem. Admin dapat mengisi form yang tersedia, yang terdiri dari:
+
+    a. Judul lagu
+    b. Nama artis
+    c. Genre
+    d. Tahun rilis
+    e. Durasi lagu
+
+Setelah data diisi dengan benar, admin dapat menyimpan data dengan menekan tombol Simpan, dan lagu akan langsung ditambahkan ke database.
+
+### 4. Import CSV
+Fitur Import CSV memungkinkan admin untuk menambahkan banyak data lagu sekaligus menggunakan file CSV. Proses ini sangat membantu untuk pengelolaan data dalam jumlah besar. Alur penggunaan fitur ini adalah:
+
+    a. Memilih file CSV yang berisi data lagu
+    b. Melakukan pratinjau data yang akan diimpor
+    c. Menekan tombol Konfirmasi Import untuk menyimpan data ke sistem
     
+Fitur ini memastikan proses input data menjadi lebih cepat dan efisien.
+
+
+Akses bagian User:
+
+### 1.  Halaman Home
+Di halaman home terdapat list lagu sebelumnya sudah diputar, terdapat juga fitur untuk play lagu yang di inginkan dan terdapat juga untuk pause, next lagu prev lagu, dan mengulang-ulang lagu tersebut.
+terdapat juga fitur search untuk mencari lagu yang ingin diputar.
+
+### 2. Halaman Playlist
+Terdapat playlist user yang berisi lagu yang diisi sendiri oleh user tersebut.
+
+### Keluar (Logout)
+Tombol Keluar digunakan untuk mengakhiri sesi admin dan keluar dari aplikasi dengan aman.
+
+
+## C. Algoritma yang Digunakan
+Pada aplikasi MyMusic, beberapa algoritma dasar digunakan untuk mendukung pengelolaan data lagu agar berjalan secara efisien dan terstruktur. Algoritma-algoritma ini diimplementasikan menggunakan bahasa pemrograman Python.
+
+### 1. Algoritma CRUD (Create, Read, Update, Delete)
+#### Cara Kerja:
+    a. Sistem menerima input dari admin melalui form atau file
+    b. Data divalidasi agar sesuai format
+    c. Data kemudian ditambahkan, ditampilkan, diperbarui, atau dihapus dari database
+
+#### Implementasi:
+    a. Create: digunakan saat admin menambah lagu baru atau import CSV
+    b. Read: digunakan untuk menampilkan data lagu pada tabel database
+    c. Update: digunakan saat admin mengedit informasi lagu
+    d. Delete: digunakan saat admin menghapus lagu tertentu
+
+Algoritma ini menjadi inti pengelolaan data pada aplikasi MyMusic.
+
+### 2. Algoritma Pencarian (Searching)
+#### Cara Kerja:
+    a. Admin memilih kategori pencarian (judul, artis, tahun, genre)
+    b. Admin memasukkan kata kunci pencarian
+    c. Sistem membandingkan kata kunci dengan data lagu satu per satu
+    d. Data yang cocok akan ditampilkan sebagai hasil pencarian
+
+#### Implementasi:
+    a. Menggunakan pencarian linear (linear search)
+    b. Cocok untuk jumlah data menengah
+
+Mudah diimplementasikan dan fleksibel
+
+### 3. Algoritma Pagination
+#### Cara Kerja:
+    a. Sistem membagi data lagu ke dalam beberapa halaman
+    b. Setiap halaman menampilkan jumlah data tertentu
+    c. Admin dapat berpindah halaman menggunakan tombol navigasi
+
+#### Implementasi:
+    a. Data dipotong berdasarkan indeks awal dan akhir
+    b. Membantu meningkatkan performa dan keterbacaan data
+
+### 4. Algoritma Import Data CSV
+#### Cara Kerja:
+    a. Admin memilih file CSV
+    b. Sistem membaca file baris per baris
+    c. Setiap baris dipecah menjadi atribut lagu
+    d. Data divalidasi lalu disimpan ke database
+
+#### Implementasi:
+    a. Menggunakan modul CSV Python
+    b. Menghindari input manual satu per satu
+
+### 5. Algoritma Backup Data (JSON)
+#### Cara Kerja:
+    a. Sistem mengambil seluruh data lagu yang tersimpan
+    b. Data diubah ke format JSON
+    c. File JSON disimpan sebagai cadangan data
+
+#### Implementasi:
+    a. Menggunakan serialisasi JSON
+    b. Memudahkan proses backup dan restore data
+
