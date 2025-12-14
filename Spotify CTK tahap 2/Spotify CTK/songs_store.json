@@ -1,0 +1,856 @@
+[
+  {
+    "id": 1,
+    "title": "Imagine",
+    "artist": "John Lennon",
+    "genre": "Rock",
+    "year": 1971
+  },
+  {
+    "id": 2,
+    "title": "Billie Jean",
+    "artist": "Michael Jackson",
+    "genre": "Pop",
+    "year": 1982
+  },
+  {
+    "id": 3,
+    "title": "Take Five",
+    "artist": "Dave Brubeck",
+    "genre": "Jazz",
+    "year": 1959
+  },
+  {
+    "id": 4,
+    "title": "Lose Yourself",
+    "artist": "Eminem",
+    "genre": "Hip Hop",
+    "year": 2002
+  },
+  {
+    "id": 5,
+    "title": "Back in Black",
+    "artist": "AC/DC",
+    "genre": "Rock",
+    "year": 1980
+  },
+  {
+    "id": 6,
+    "title": "Imagine",
+    "artist": "John Lennon",
+    "genre": "Blues",
+    "year": 1971
+  },
+  {
+    "id": 7,
+    "title": "Billie Jean",
+    "artist": "Michael Jackson",
+    "genre": "Hip Hop",
+    "year": 1982
+  },
+  {
+    "id": 8,
+    "title": "Like a Rolling Stone",
+    "artist": "Bob Dylan",
+    "genre": "Rock",
+    "year": 1965
+  },
+  {
+    "id": 9,
+    "title": "Bohemian Rhapsody",
+    "artist": "Queen",
+    "genre": "Rock",
+    "year": 1975
+  },
+  {
+    "id": 10,
+    "title": "Smells Like Teen Spirit",
+    "artist": "Nirvana",
+    "genre": "Pop",
+    "year": 1991
+  },
+  {
+    "id": 11,
+    "title": "What's Going On",
+    "artist": "Marvin Gaye",
+    "genre": "Electronic",
+    "year": 1971
+  },
+  {
+    "id": 12,
+    "title": "Hey Jude",
+    "artist": "The Beatles",
+    "genre": "Electronic",
+    "year": 1968
+  },
+  {
+    "id": 13,
+    "title": "Sweet Child O' Mine",
+    "artist": "Guns N' Roses",
+    "genre": "Techno",
+    "year": 1987
+  },
+  {
+    "id": 14,
+    "title": "Thriller",
+    "artist": "Michael Jackson",
+    "genre": "Techno",
+    "year": 1982
+  },
+  {
+    "id": 15,
+    "title": "Hotel California",
+    "artist": "Eagles",
+    "genre": "Pop",
+    "year": 1977
+  },
+  {
+    "id": 16,
+    "title": "Stairway to Heaven",
+    "artist": "Led Zeppelin",
+    "genre": "RnB",
+    "year": 1971
+  },
+  {
+    "id": 17,
+    "title": "Respect",
+    "artist": "Aretha Franklin",
+    "genre": "Jazz",
+    "year": 1967
+  },
+  {
+    "id": 18,
+    "title": "Good Vibrations",
+    "artist": "The Beach Boys",
+    "genre": "Dangdut",
+    "year": 1966
+  },
+  {
+    "id": 19,
+    "title": "Born to Run",
+    "artist": "Bruce Springsteen",
+    "genre": "Gospel",
+    "year": 1975
+  },
+  {
+    "id": 20,
+    "title": "Superstition",
+    "artist": "Stevie Wonder",
+    "genre": "Metal",
+    "year": 1972
+  },
+  {
+    "id": 21,
+    "title": "I Will Always Love You",
+    "artist": "Whitney Houston",
+    "genre": "Hip Hop",
+    "year": 1992
+  },
+  {
+    "id": 22,
+    "title": "Every Breath You Take",
+    "artist": "The Police",
+    "genre": "RnB",
+    "year": 1983
+  },
+  {
+    "id": 23,
+    "title": "Purple Rain",
+    "artist": "Prince",
+    "genre": "RnB",
+    "year": 1984
+  },
+  {
+    "id": 24,
+    "title": "No Woman, No Cry",
+    "artist": "Bob Marley",
+    "genre": "Rock",
+    "year": 1974
+  },
+  {
+    "id": 25,
+    "title": "One",
+    "artist": "U2",
+    "genre": "Electronic",
+    "year": 1991
+  },
+  {
+    "id": 26,
+    "title": "Yesterday",
+    "artist": "The Beatles",
+    "genre": "Gospel",
+    "year": 1965
+  },
+  {
+    "id": 27,
+    "title": "Let It Be",
+    "artist": "The Beatles",
+    "genre": "Jazz",
+    "year": 1970
+  },
+  {
+    "id": 28,
+    "title": "Paint It, Black",
+    "artist": "The Rolling Stones",
+    "genre": "Gospel",
+    "year": 1966
+  },
+  {
+    "id": 29,
+    "title": "Wonderwall",
+    "artist": "Oasis",
+    "genre": "Metal",
+    "year": 1995
+  },
+  {
+    "id": 30,
+    "title": "Shake It Off",
+    "artist": "Taylor Swift",
+    "genre": "Hip Hop",
+    "year": 2014
+  },
+  {
+    "id": 31,
+    "title": "Rolling in the Deep",
+    "artist": "Adele",
+    "genre": "Jazz",
+    "year": 2010
+  },
+  {
+    "id": 32,
+    "title": "Uptown Funk",
+    "artist": "Mark Ronson ft. Bruno Mars",
+    "genre": "Pop",
+    "year": 2014
+  },
+  {
+    "id": 33,
+    "title": "Hallelujah",
+    "artist": "Leonard Cohen",
+    "genre": "Electronic",
+    "year": 1984
+  },
+  {
+    "id": 34,
+    "title": "Creep",
+    "artist": "Radiohead",
+    "genre": "Funk",
+    "year": 1992
+  },
+  {
+    "id": 35,
+    "title": "Lose Yourself",
+    "artist": "Eminem",
+    "genre": "Rock",
+    "year": 2002
+  },
+  {
+    "id": 36,
+    "title": "Back in Black",
+    "artist": "AC/DC",
+    "genre": "Funk",
+    "year": 1980
+  },
+  {
+    "id": 37,
+    "title": "Eye of the Tiger",
+    "artist": "Survivor",
+    "genre": "Gospel",
+    "year": 1982
+  },
+  {
+    "id": 38,
+    "title": "Girls Just Want to Have Fun",
+    "artist": "Cyndi Lauper",
+    "genre": "Blues",
+    "year": 1983
+  },
+  {
+    "id": 39,
+    "title": "Viva La Vida",
+    "artist": "Coldplay",
+    "genre": "Reggae",
+    "year": 2008
+  },
+  {
+    "id": 40,
+    "title": "Clocks",
+    "artist": "Coldplay",
+    "genre": "Gospel",
+    "year": 2002
+  },
+  {
+    "id": 41,
+    "title": "Seven Nation Army",
+    "artist": "The White Stripes",
+    "genre": "Pop",
+    "year": 2003
+  },
+  {
+    "id": 42,
+    "title": "Take On Me",
+    "artist": "a-ha",
+    "genre": "Reggae",
+    "year": 1985
+  },
+  {
+    "id": 43,
+    "title": "Gangsta's Paradise",
+    "artist": "Coolio",
+    "genre": "Rock",
+    "year": 1995
+  },
+  {
+    "id": 44,
+    "title": "Toxic",
+    "artist": "Britney Spears",
+    "genre": "Electronic",
+    "year": 2003
+  },
+  {
+    "id": 45,
+    "title": "Rehab",
+    "artist": "Amy Winehouse",
+    "genre": "Electronic",
+    "year": 2006
+  },
+  {
+    "id": 46,
+    "title": "Someone Like You",
+    "artist": "Adele",
+    "genre": "Gospel",
+    "year": 2011
+  },
+  {
+    "id": 47,
+    "title": "Happy",
+    "artist": "Pharrell Williams",
+    "genre": "Blues",
+    "year": 2013
+  },
+  {
+    "id": 48,
+    "title": "Bad Guy",
+    "artist": "Billie Eilish",
+    "genre": "Gospel",
+    "year": 2019
+  },
+  {
+    "id": 49,
+    "title": "Shape of You",
+    "artist": "Ed Sheeran",
+    "genre": "Hip Hop",
+    "year": 2017
+  },
+  {
+    "id": 50,
+    "title": "Blinding Lights",
+    "artist": "The Weeknd",
+    "genre": "Techno",
+    "year": 2019
+  },
+  {
+    "id": 51,
+    "title": "Levitating",
+    "artist": "Dua Lipa",
+    "genre": "RnB",
+    "year": 2020
+  },
+  {
+    "id": 52,
+    "title": "Senorita",
+    "artist": "Shawn Mendes & Camila Cabello",
+    "genre": "Metal",
+    "year": 2019
+  },
+  {
+    "id": 53,
+    "title": "Old Town Road",
+    "artist": "Lil Nas X",
+    "genre": "Dangdut",
+    "year": 2019
+  },
+  {
+    "id": 54,
+    "title": "Shallow",
+    "artist": "Lady Gaga & Bradley Cooper",
+    "genre": "Techno",
+    "year": 2018
+  },
+  {
+    "id": 55,
+    "title": "Despacito",
+    "artist": "Luis Fonsi ft. Daddy Yankee",
+    "genre": "Hip Hop",
+    "year": 2017
+  },
+  {
+    "id": 56,
+    "title": "Thinking Out Loud",
+    "artist": "Ed Sheeran",
+    "genre": "Techno",
+    "year": 2014
+  },
+  {
+    "id": 57,
+    "title": "All of Me",
+    "artist": "John Legend",
+    "genre": "Blues",
+    "year": 2013
+  },
+  {
+    "id": 58,
+    "title": "Rolling in the Deep",
+    "artist": "Adele",
+    "genre": "Hip Hop",
+    "year": 2010
+  },
+  {
+    "id": 59,
+    "title": "Viva La Vida",
+    "artist": "Coldplay",
+    "genre": "Electronic",
+    "year": 2008
+  },
+  {
+    "id": 60,
+    "title": "Umbrella",
+    "artist": "Rihanna ft. Jay-Z",
+    "genre": "Dangdut",
+    "year": 2007
+  },
+  {
+    "id": 61,
+    "title": "Crazy",
+    "artist": "Gnarls Barkley",
+    "genre": "Blues",
+    "year": 2006
+  },
+  {
+    "id": 62,
+    "title": "Hips Don't Lie",
+    "artist": "Shakira ft. Wyclef Jean",
+    "genre": "Gospel",
+    "year": 2006
+  },
+  {
+    "id": 63,
+    "title": "Boulevard of Broken Dreams",
+    "artist": "Green Day",
+    "genre": "Blues",
+    "year": 2004
+  },
+  {
+    "id": 64,
+    "title": "Hey Ya!",
+    "artist": "OutKast",
+    "genre": "Pop",
+    "year": 2003
+  },
+  {
+    "id": 65,
+    "title": "Complicated",
+    "artist": "Avril Lavigne",
+    "genre": "Techno",
+    "year": 2002
+  },
+  {
+    "id": 66,
+    "title": "In the End",
+    "artist": "Linkin Park",
+    "genre": "Gospel",
+    "year": 2001
+  },
+  {
+    "id": 67,
+    "title": "Oops!... I Did It Again",
+    "artist": "Britney Spears",
+    "genre": "Funk",
+    "year": 2000
+  },
+  {
+    "id": 68,
+    "title": "Smooth",
+    "artist": "Santana ft. Rob Thomas",
+    "genre": "Pop",
+    "year": 1999
+  },
+  {
+    "id": 69,
+    "title": "My Heart Will Go On",
+    "artist": "Celine Dion",
+    "genre": "RnB",
+    "year": 1997
+  },
+  {
+    "id": 70,
+    "title": "Wannabe",
+    "artist": "Spice Girls",
+    "genre": "Electronic",
+    "year": 1996
+  },
+  {
+    "id": 71,
+    "title": "Waterfalls",
+    "artist": "TLC",
+    "genre": "Reggae",
+    "year": 1995
+  },
+  {
+    "id": 72,
+    "title": "Ironic",
+    "artist": "Alanis Morissette",
+    "genre": "Metal",
+    "year": 1995
+  },
+  {
+    "id": 73,
+    "title": "Zombie",
+    "artist": "The Cranberries",
+    "genre": "Reggae",
+    "year": 1994
+  },
+  {
+    "id": 74,
+    "title": "Creep",
+    "artist": "Radiohead",
+    "genre": "Techno",
+    "year": 1993
+  },
+  {
+    "id": 75,
+    "title": "November Rain",
+    "artist": "Guns N' Roses",
+    "genre": "Hip Hop",
+    "year": 1991
+  },
+  {
+    "id": 76,
+    "title": "Nothing Else Matters",
+    "artist": "Metallica",
+    "genre": "Funk",
+    "year": 1991
+  },
+  {
+    "id": 77,
+    "title": "Under the Bridge",
+    "artist": "Red Hot Chili Peppers",
+    "genre": "Dangdut",
+    "year": 1992
+  },
+  {
+    "id": 78,
+    "title": "Enter Sandman",
+    "artist": "Metallica",
+    "genre": "Jazz",
+    "year": 1991
+  },
+  {
+    "id": 79,
+    "title": "Smells Like Teen Spirit",
+    "artist": "Nirvana",
+    "genre": "Pop",
+    "year": 1991
+  },
+  {
+    "id": 80,
+    "title": "Losing My Religion",
+    "artist": "R.E.M.",
+    "genre": "Metal",
+    "year": 1991
+  },
+  {
+    "id": 81,
+    "title": "Vogue",
+    "artist": "Madonna",
+    "genre": "Metal",
+    "year": 1990
+  },
+  {
+    "id": 82,
+    "title": "Ice Ice Baby",
+    "artist": "Vanilla Ice",
+    "genre": "Rock",
+    "year": 1990
+  },
+  {
+    "id": 83,
+    "title": "Like a Prayer",
+    "artist": "Madonna",
+    "genre": "Gospel",
+    "year": 1989
+  },
+  {
+    "id": 84,
+    "title": "Sweet Child O' Mine",
+    "artist": "Guns N' Roses",
+    "genre": "Electronic",
+    "year": 1987
+  },
+  {
+    "id": 85,
+    "title": "With or Without You",
+    "artist": "U2",
+    "genre": "Dangdut",
+    "year": 1987
+  },
+  {
+    "id": 86,
+    "title": "Livin' on a Prayer",
+    "artist": "Bon Jovi",
+    "genre": "Techno",
+    "year": 1986
+  },
+  {
+    "id": 87,
+    "title": "Take On Me",
+    "artist": "a-ha",
+    "genre": "Metal",
+    "year": 1985
+  },
+  {
+    "id": 88,
+    "title": "Careless Whisper",
+    "artist": "George Michael",
+    "genre": "RnB",
+    "year": 1984
+  },
+  {
+    "id": 89,
+    "title": "Thriller",
+    "artist": "Michael Jackson",
+    "genre": "Techno",
+    "year": 1982
+  },
+  {
+    "id": 90,
+    "title": "Eye of the Tiger",
+    "artist": "Survivor",
+    "genre": "RnB",
+    "year": 1982
+  },
+  {
+    "id": 91,
+    "title": "Don't Stop Believin'",
+    "artist": "Journey",
+    "genre": "Gospel",
+    "year": 1981
+  },
+  {
+    "id": 92,
+    "title": "Another One Bites the Dust",
+    "artist": "Queen",
+    "genre": "Electronic",
+    "year": 1980
+  },
+  {
+    "id": 93,
+    "title": "Imagine",
+    "artist": "John Lennon",
+    "genre": "Techno",
+    "year": 1971
+  },
+  {
+    "id": 94,
+    "title": "Stairway to Heaven",
+    "artist": "Led Zeppelin",
+    "genre": "Reggae",
+    "year": 1971
+  },
+  {
+    "id": 95,
+    "title": "Let It Be",
+    "artist": "The Beatles",
+    "genre": "Jazz",
+    "year": 1970
+  },
+  {
+    "id": 96,
+    "title": "Bridge Over Troubled Water",
+    "artist": "Simon & Garfunkel",
+    "genre": "Gospel",
+    "year": 1970
+  },
+  {
+    "id": 97,
+    "title": "Hotel California",
+    "artist": "Eagles",
+    "genre": "Techno",
+    "year": 1977
+  },
+  {
+    "id": 98,
+    "title": "Go Your Own Way",
+    "artist": "Fleetwood Mac",
+    "genre": "Electronic",
+    "year": 1977
+  },
+  {
+    "id": 99,
+    "title": "Dancing Queen",
+    "artist": "ABBA",
+    "genre": "Gospel",
+    "year": 1976
+  },
+  {
+    "id": 100,
+    "title": "Bohemian Rhapsody",
+    "artist": "Queen",
+    "genre": "Metal",
+    "year": 1975
+  },
+  {
+    "id": 101,
+    "title": "Born to Run",
+    "artist": "Bruce Springsteen",
+    "genre": "Rock",
+    "year": 1975
+  },
+  {
+    "id": 102,
+    "title": "Superstition",
+    "artist": "Stevie Wonder",
+    "genre": "Electronic",
+    "year": 1972
+  },
+  {
+    "id": 103,
+    "title": "Lean on Me",
+    "artist": "Bill Withers",
+    "genre": "Electronic",
+    "year": 1972
+  },
+  {
+    "id": 104,
+    "title": "American Pie",
+    "artist": "Don McLean",
+    "genre": "Jazz",
+    "year": 1971
+  },
+  {
+    "id": 105,
+    "title": "Your Song",
+    "artist": "Elton John",
+    "genre": "RnB",
+    "year": 1970
+  },
+  {
+    "id": 106,
+    "title": "I Heard It Through the Grapevine",
+    "artist": "Marvin Gaye",
+    "genre": "Techno",
+    "year": 1968
+  },
+  {
+    "id": 107,
+    "title": "Sittin' On The Dock of the Bay",
+    "artist": "Otis Redding",
+    "genre": "Funk",
+    "year": 1968
+  },
+  {
+    "id": 108,
+    "title": "Respect",
+    "artist": "Aretha Franklin",
+    "genre": "Gospel",
+    "year": 1967
+  },
+  {
+    "id": 109,
+    "title": "Good Vibrations",
+    "artist": "The Beach Boys",
+    "genre": "Jazz",
+    "year": 1966
+  },
+  {
+    "id": 110,
+    "title": "Like a Rolling Stone",
+    "artist": "Bob Dylan",
+    "genre": "Metal",
+    "year": 1965
+  },
+  {
+    "id": 111,
+    "title": "My Girl",
+    "artist": "The Temptations",
+    "genre": "Reggae",
+    "year": 1964
+  },
+  {
+    "id": 112,
+    "title": "I Want to Hold Your Hand",
+    "artist": "The Beatles",
+    "genre": "Techno",
+    "year": 1963
+  },
+  {
+    "id": 113,
+    "title": "Can't Help Falling in Love",
+    "artist": "Elvis Presley",
+    "genre": "Funk",
+    "year": 1961
+  },
+  {
+    "id": 114,
+    "title": "Only You",
+    "artist": "The Platters",
+    "genre": "Electronic",
+    "year": 1955
+  },
+  {
+    "id": 115,
+    "title": "Rock Around the Clock",
+    "artist": "Bill Haley & His Comets",
+    "genre": "Dangdut",
+    "year": 1954
+  },
+  {
+    "id": 116,
+    "title": "Hound Dog",
+    "artist": "Elvis Presley",
+    "genre": "Rock",
+    "year": 1956
+  },
+  {
+    "id": 117,
+    "title": "Jailhouse Rock",
+    "artist": "Elvis Presley",
+    "genre": "Jazz",
+    "year": 1957
+  },
+  {
+    "id": 118,
+    "title": "Great Balls of Fire",
+    "artist": "Jerry Lee Lewis",
+    "genre": "Reggae",
+    "year": 1957
+  },
+  {
+    "id": 119,
+    "title": "La Bamba",
+    "artist": "Ritchie Valens",
+    "genre": "Techno",
+    "year": 1958
+  },
+  {
+    "id": 120,
+    "title": "Johnny B. Goode",
+    "artist": "Chuck Berry",
+    "genre": "Rock",
+    "year": 1958
+  },
+  {
+    "id": 121,
+    "title": "What'd I Say",
+    "artist": "Ray Charles",
+    "genre": "Reggae",
+    "year": 1959
+  },
+  {
+    "id": 122,
+    "title": "Take Five",
+    "artist": "Dave Brubeck",
+    "genre": "Electronic",
+    "year": 1959
+  }
+]
