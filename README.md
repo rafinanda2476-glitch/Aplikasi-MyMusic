@@ -173,7 +173,6 @@ Mudah diimplementasikan dan fleksibel
     a. Fungsi toggleShuffle pada controller_player.py
     b. Memanfaatkan modul random untuk mengacak indeks antrean pemutaran
 
-### Tahap 1
 
 
     
