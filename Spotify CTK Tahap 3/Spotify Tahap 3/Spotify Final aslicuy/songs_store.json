@@ -1,0 +1,227 @@
+[
+  {
+    "id": 1,
+    "title": "Brave Love Tiga",
+    "artist": "Ultraman Tiga OST",
+    "genre": "Rock",
+    "year": 1996,
+    "duration": 217,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\(Brave Love, Tiga) Ultraman Tiga ending song - lyrics - UltraSong Lyrics.mp3"
+  },
+  {
+    "id": 2,
+    "title": "Alive A Life",
+    "artist": "Rica Matsumoto",
+    "genre": "Rock",
+    "year": 2002,
+    "duration": 259,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\Alive A life - Rica Matsumoto.mp3"
+  },
+  {
+    "id": 3,
+    "title": "Beat on Dream on",
+    "artist": "Ultraman Gaia OST",
+    "genre": "Pop",
+    "year": 1998,
+    "duration": 237,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\Beat on Dream on (Ultraman Gaia Ending) Lyrics - Ultra Lyrics.mp3"
+  },
+  {
+    "id": 5,
+    "title": "Eiyuu",
+    "artist": "Ultraman Nexus OST",
+    "genre": "Rock",
+    "year": 2004,
+    "duration": 201,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\Eiyuu (Ultraman Nexus Operning) Lyrics - Ultra Lyrics.mp3"
+  },
+  {
+    "id": 6,
+    "title": "Ginga No Uta",
+    "artist": "Ultraman Lyrics",
+    "genre": "Electronic",
+    "year": 2013,
+    "duration": 247,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\Ginga No Uta (Ultraman ginga Opening) Lyrics - Ultra Lyrics.mp3"
+  },
+  {
+    "id": 7,
+    "title": "Journey Through The Decade",
+    "artist": "GACKT",
+    "genre": "Rock",
+    "year": 2009,
+    "duration": 272,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\Journey through the Decade - GACKT.mp3"
+  },
+  {
+    "id": 8,
+    "title": "Justifaiz",
+    "artist": "ISSA",
+    "genre": "Hip Hop",
+    "year": 2003,
+    "duration": 223,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\Kamen Rider 555_Faiz OpISSA - Justi\u03c6'sLirik+Terjemahan Bahasa Indonesia. - TOKUNIME MUSIC.mp3"
+  },
+  {
+    "id": 9,
+    "title": "Let's Go Rider Kick",
+    "artist": "Koichi Fuji",
+    "genre": "Rock",
+    "year": 1971,
+    "duration": 148,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\Kamen Rider Ichigo Opening Song [Let's Go!! Rider Kick - Koichi Fuji] Lirik Dan Terjemahan - ZIHANQR-MUSIC.mp3"
+  },
+  {
+    "id": 10,
+    "title": "Kimi Dake O Mamoritai",
+    "artist": "Ultraman Dyna OST",
+    "genre": "Pop",
+    "year": 1997,
+    "duration": 270,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\Kimi Dake O Mamoritai (Ultraman Dyna Ending) Lyrics - Ultra Lyrics.mp3"
+  },
+  {
+    "id": 11,
+    "title": "Ksatria Baja Hitam RX",
+    "artist": "ZerosiX Park",
+    "genre": "Rock",
+    "year": 1988,
+    "duration": 228,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\KSATRIA BAJA HITAM RX (Opening)  Kamen Rider Black RX  COVER by ZerosiX park - Zerosix Park.mp3"
+  },
+  {
+    "id": 12,
+    "title": "Ksatria Baja Hitam Intro",
+    "artist": "Kamen Rider Black OST",
+    "genre": "Hip Hop",
+    "year": 1987,
+    "duration": 94,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\Ksatria Batang Hitam Intro - fluxcup institute.mp3"
+  },
+  {
+    "id": 13,
+    "title": "Lovin You Lovin Me",
+    "artist": "Ultraman Gaia OST",
+    "genre": "Pop",
+    "year": 1998,
+    "duration": 265,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\Lovi'n You Lovi'n Me (Ultraman Gaia Ending) Lyrics - Ultra Lyrics.mp3"
+  },
+  {
+    "id": 14,
+    "title": "Miracle Of Ultra",
+    "artist": "Project DMM",
+    "genre": "Pop",
+    "year": 2006,
+    "duration": 330,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\Miracle Of Ultra (Project DMM) Lyrics - Ultra Lyrics.mp3"
+  },
+  {
+    "id": 15,
+    "title": "Orb No Inori",
+    "artist": "Ultraman Orb OST",
+    "genre": "Rock",
+    "year": 2016,
+    "duration": 319,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\Orb No Inori (Ultraman Orb Opening) Lyrics - Ultra Lyrics.mp3"
+  },
+  {
+    "id": 16,
+    "title": "Power Rangers Mighty Morphin",
+    "artist": "ZerosiX Park",
+    "genre": "Rock",
+    "year": 1993,
+    "duration": 212,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\POWER RANGERS MIGHTY MORPHIN (Opening) - ROCK COVER by ZerosiX park - Zerosix Park.mp3"
+  },
+  {
+    "id": 17,
+    "title": "Wake Up Decker",
+    "artist": "SCREEN Mode",
+    "genre": "Rock",
+    "year": 2022,
+    "duration": 240,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\SCREEN mode\u300cWake up Decker!\u300d\u300e\u30a6\u30eb\u30c8\u30e9\u30de\u30f3\u30c7\u30c3\u30ab\u30fc\u300f\u30aa\u30fc\u30d7\u30cb\u30f3\u30b0\u4e3b\u984c\u6b4c \u6797\u52c7  \u592a\u7530\u96c5\u53cb  UltramanDecker - SCREEN mode.mp3"
+  },
+  {
+    "id": 18,
+    "title": "Something You Can Do",
+    "artist": "Ultraman Cosmos OST",
+    "genre": "Pop",
+    "year": 2001,
+    "duration": 300,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\Something you can do (Ultraman cosmos Ending) - Lyrics - Ultra Lyrics.mp3"
+  },
+  {
+    "id": 19,
+    "title": "Spirit",
+    "artist": "Ultraman Cosmos OST",
+    "genre": "Hip Hop",
+    "year": 2001,
+    "duration": 229,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\Spirit (Ultraman Cosmos Opening) Lyrics - Ultra Lyrics.mp3"
+  },
+  {
+    "id": 20,
+    "title": "Ultraman Dyna",
+    "artist": "Ultraman Dyna OST",
+    "genre": "Rock",
+    "year": 1997,
+    "duration": 252,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\Ultraman Dyna opening (Lyrics) - Ultra Lyrics.mp3"
+  },
+  {
+    "id": 21,
+    "title": "Ultraman Max",
+    "artist": "Ultraman Max OST",
+    "genre": "Hip Hop",
+    "year": 2005,
+    "duration": 194,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\Ultraman Max Opening (Lyrics) - Ultra Lyrics.mp3"
+  },
+  {
+    "id": 22,
+    "title": "Susume Ultraman Zero",
+    "artist": "Voyager",
+    "genre": "Pop",
+    "year": 2010,
+    "duration": 270,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\Ultraman Zero - Opening FULL\u3018Susume! Ultraman Zero\u3019 by Voyager - 95Studio.mp3"
+  },
+  {
+    "id": 23,
+    "title": "Ultraman Mebius",
+    "artist": "Ultraman Mebius OST",
+    "genre": "Pop",
+    "year": 2006,
+    "duration": 297,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\Urutoraman Mebiusu (Ultraman Mebius Opening) Lyrics - Ultra Lyrics.mp3"
+  },
+  {
+    "id": 24,
+    "title": "Take Me Higher",
+    "artist": "V6",
+    "genre": "Pop",
+    "year": 1996,
+    "duration": 286,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music\\music\\V6 _ TAKE ME HIGHER.mp3"
+  },
+  {
+    "id": 25,
+    "title": "Buddy, steady, go!",
+    "artist": "Takuma Terashima",
+    "genre": "Rock",
+    "year": 2025,
+    "duration": 253,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music/music/Buddy, steady, go! - Takuma Terashima.mp3"
+  },
+  {
+    "id": 26,
+    "title": "Kamen Rider Ichigo Opening Song",
+    "artist": "ZIHANQR-MUSIC",
+    "genre": "Pop",
+    "year": 2025,
+    "duration": 148,
+    "file_path": "C:/Users/LENOVO/Documents/Kuliah TUS/Semester 3/Struktur Data (Praktikum)/GUI-Spotify/Spotif Akhir/music/music/Kamen Rider Ichigo Opening Song [Let's Go!! Rider Kick - Koichi Fuji] Lirik Dan Terjemahan - ZIHANQR-MUSIC.mp3"
+  }
+]
