@@ -45,7 +45,7 @@ Setelah data diisi dengan benar, admin dapat menyimpan data dengan menekan tombo
 ### 4. Import MP3
 Fitur Import MP3 memungkinkan admin untuk menambahkan banyak data lagu sekaligus menggunakan file MP3. Proses ini sangat membantu untuk pengelolaan data dalam jumlah besar. Alur penggunaan fitur ini adalah:
 
-    a. Memilih file CSV yang berisi data lagu
+    a. Memilih folder yang berisi data lagu
     b. Melakukan pratinjau data yang akan diimpor
     c. Menekan tombol Konfirmasi Import untuk menyimpan data ke sistem
     
