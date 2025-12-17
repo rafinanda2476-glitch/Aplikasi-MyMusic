@@ -7,7 +7,7 @@ Tujuan dari pengembangan aplikasi Spotify CTK ini adalah untuk merancang dan men
 ## B. Fitur Program
 Ada 2 cara masuk akses diaplikasi MyMusic. Ada admin dan user:
 
-Akses bagian Admin:
+**Akses bagian Admin:**
 
 ### 1. Halaman Dashboard
 Halaman Dashboard Admin menampilkan ringkasan informasi utama dari database musik dalam bentuk kartu statistik, sehingga admin dapat dengan cepat mengetahui kondisi data lagu saat ini. yakni ada fitur:
@@ -15,6 +15,10 @@ Halaman Dashboard Admin menampilkan ringkasan informasi utama dari database musi
     a. Total Lagu: jumlah seluruh lagu yang tersimpan dalam sistem
     b. Total Genre: jumlah genre musik yang tersedia
     c. Total Artis: jumlah artis yang tercatat
+    d. Total durasi: jumlah keseluruhan durasi lagu
+    e. Top 5 artis (berdasarkan jumlah lagu): menampilkan top 5 artis berdasarkan jumlah lagu terbanyak
+    f. Distribusi genre: menampilkan keseluruhan genre lagu dengan persentase jumlah keseluruhan genre
+    g. Lagu baru ditambahkan: menampilkan update terbaru lagu yang barusan di import
 
 ### 2. Database Lagu
 Fitur Database Lagu berfungsi untuk menampilkan seluruh data lagu dalam bentuk tabel yang rapi dan mudah dibaca. Informasi yang ditampilkan meliputi:
@@ -24,42 +28,74 @@ Fitur Database Lagu berfungsi untuk menampilkan seluruh data lagu dalam bentuk t
     c. Genre
     d. Tahun rilis
     e. Durasi lagu
-    
+
 #### Pada halaman ini juga tersedia fitur:
-    a. Pencarian (Search) berdasarkan kategori tertentu seperti title, artist, year, dan genre
-    b. Pagination untuk memudahkan navigasi data dalam jumlah besar
-    c. Aksi Edit untuk mengubah data lagu
-    d. Aksi Hapus untuk menghapus lagu dari database
+    a. Pencarian (Search) berdasarkan kategori tertentu seperti judul, artis, genre, dan tahun
+    b. Aksi Edit untuk mengubah data lagu
+    c. Aksi Hapus untuk menghapus lagu dari database
 
 ### 3. Tambah Lagu Baru
 Menu Tambah Baru digunakan untuk menambahkan data lagu secara manual ke dalam sistem. Admin dapat mengisi form yang tersedia, yang terdiri dari:
 
+    Memilih file audio (MP3) melalui tombol Browse (single file)
+
+#### Mengisi metadata lagu yang terdiri dari:
     a. Judul lagu
     b. Nama artis
-    c. Genre
+    c. Genre (dipilih dari dropdown)
     d. Tahun rilis
-    e. Durasi lagu
+    e. Durasi lagu (dalam detik)
 
 Setelah data diisi dengan benar, admin dapat menyimpan data dengan menekan tombol Simpan, dan lagu akan langsung ditambahkan ke database.
 
-### 4. Import CSV
-Fitur Import CSV memungkinkan admin untuk menambahkan banyak data lagu sekaligus menggunakan file CSV. Proses ini sangat membantu untuk pengelolaan data dalam jumlah besar. Alur penggunaan fitur ini adalah:
+### 4. Import folder
+Fitur Import Folder Lagu digunakan untuk menambahkan banyak file musik sekaligus ke dalam sistem MyMusic dengan cara memindai (scan) satu folder yang berisi file MP3.
 
-    a. Memilih file CSV yang berisi data lagu
-    b. Melakukan pratinjau data yang akan diimpor
-    c. Menekan tombol Konfirmasi Import untuk menyimpan data ke sistem
+    a. Menekan "pilih Folder & scan"
+    b. kemudian cari folder data lagu yang ingin diimport
+    c. setelah memilih folder lanjut klik "select folder"
+    d. import folder berhasil
     
 Fitur ini memastikan proses input data menjadi lebih cepat dan efisien.
 
 
-Akses bagian User:
+**Akses bagian User:**
 
 ### 1.  Halaman Home
-Di halaman home terdapat list lagu sebelumnya sudah diputar, terdapat juga fitur untuk play lagu yang di inginkan dan terdapat juga untuk pause, next lagu prev lagu, dan mengulang-ulang lagu tersebut.
-terdapat juga fitur search untuk mencari lagu yang ingin diputar.
+Halaman Home merupakan halaman utama yang digunakan oleh pengguna untuk menjelajahi dan memutar lagu. Pada halaman ini, sistem menampilkan daftar Trending Hits, yaitu lagu-lagu yang sedang populer dan direkomendasikan kepada pengguna. Informasi yang ditampilkan pada setiap lagu meliputi:
 
-### 2. Halaman Playlist
-Terdapat playlist user yang berisi lagu yang diisi sendiri oleh user tersebut.
+    a. Judul lagu
+    b. Nama artis
+    c. Durasi lagu
+
+Pada halaman ini juga tersedia fitur:
+
+    a. Tombol Play untuk memutar lagu secara langsung
+    b. Music Player di bagian bawah halaman untuk mengontrol pemutaran lagu (play, pause, navigasi, dan volume)
+    c. Menu Playlist pada sidebar untuk mengakses dan mengelola playlist pengguna
+    d. Navigasi sederhana yang memudahkan pengguna berpindah antar halaman
+
+Halaman ini dirancang dengan tampilan yang intuitif sehingga pengguna dapat dengan mudah menemukan dan menikmati musik yang tersedia.
+
+### 2. Tambah Playlist
+Terdapat halaman untuk membuat play list.
+    
+    a. Tulis nama playlist yang ingin dibuat 
+    b. Kemudian setelah memasukan nama playlist, langsung saya untuk klik "Gas Bikin'
+    c. Playlist baru selesai dibuat
+
+### 3. Your Playlist
+di halaman ini terdapat playlist dari user tersebut yang terdapat:
+
+    a. Jumlah lagu
+    b. Ada lagu apaa saja di playlist ter tersebut
+    c. Lagu ada fitur untuk memutar lagu tersebut
+
+#### Tambahan:
+ada fitur tambahan juga yakni:
+
+    a. Hapus playlist
+    b. Ganti nama playlist
 
 ### Keluar (Logout)
 Tombol Keluar digunakan untuk mengakhiri sesi admin dan keluar dari aplikasi dengan aman.
