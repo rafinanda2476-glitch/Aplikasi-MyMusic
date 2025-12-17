@@ -5,7 +5,7 @@
 Tujuan dari pengembangan aplikasi Spotify CTK ini adalah untuk merancang dan mengimplementasikan sebuah aplikasi pemutar musik berbasis desktop menggunakan bahasa pemrograman Python dengan antarmuka grafis CustomTkinter. Aplikasi ini bertujuan untuk membantu pengguna dalam mengelola, memutar, dan mengorganisir koleksi lagu secara terstruktur dan efisien.
 
 ## B. Fitur Program
-Ada 2 cara masuk akses diaplikasi MyMusic. Ada admin dan user:
+Ada 2 cara masuk akses di aplikasi MyMusic yaitu sebagai Admin (PIN: 0000) dan sebagai User (PIN: 9999)
 
 Akses bagian Admin:
 
@@ -15,6 +15,7 @@ Halaman Dashboard Admin menampilkan ringkasan informasi utama dari database musi
     a. Total Lagu: jumlah seluruh lagu yang tersimpan dalam sistem
     b. Total Genre: jumlah genre musik yang tersedia
     c. Total Artis: jumlah artis yang tercatat
+    d. Total Durasi : Durasi seluruh lagu dalam database
 
 ### 2. Database Lagu
 Fitur Database Lagu berfungsi untuk menampilkan seluruh data lagu dalam bentuk tabel yang rapi dan mudah dibaca. Informasi yang ditampilkan meliputi:
@@ -30,6 +31,7 @@ Fitur Database Lagu berfungsi untuk menampilkan seluruh data lagu dalam bentuk t
     b. Pagination untuk memudahkan navigasi data dalam jumlah besar
     c. Aksi Edit untuk mengubah data lagu
     d. Aksi Hapus untuk menghapus lagu dari database
+    e. Pengurutan (Sorting) untuk mengurutkan lagu berdasarkan Judul, Artis, Tahun, atau Genre
 
 ### 3. Tambah Lagu Baru
 Menu Tambah Baru digunakan untuk menambahkan data lagu secara manual ke dalam sistem. Admin dapat mengisi form yang tersedia, yang terdiri dari:
@@ -46,7 +48,7 @@ Setelah data diisi dengan benar, admin dapat menyimpan data dengan menekan tombo
 Fitur Import MP3 memungkinkan admin untuk menambahkan banyak data lagu sekaligus menggunakan file MP3. Proses ini sangat membantu untuk pengelolaan data dalam jumlah besar. Alur penggunaan fitur ini adalah:
 
     a. Memilih folder yang berisi data lagu
-    b. Melakukan pratinjau data yang akan diimpor
+    b. Melakukan pratinjau data yang akan di impor
     c. Menekan tombol Konfirmasi Import untuk menyimpan data ke sistem
     
 Fitur ini memastikan proses input data menjadi lebih cepat dan efisien.
@@ -55,14 +57,18 @@ Fitur ini memastikan proses input data menjadi lebih cepat dan efisien.
 Akses bagian User:
 
 ### 1.  Halaman Home
-Di halaman home terdapat list lagu sebelumnya sudah diputar, terdapat juga fitur untuk play lagu yang di inginkan dan terdapat juga untuk pause, next lagu prev lagu, dan mengulang-ulang lagu tersebut.
+Di halaman home menampilkan daftar Trending Hits yang berisi lagu-lagu rekomendasi untuk pengguna, terdapat juga fitur untuk play lagu yang di inginkan dan terdapat juga untuk pause, next lagu prev lagu, dan mengulang-ulang lagu tersebut.
 terdapat juga fitur search untuk mencari lagu yang ingin diputar.
 
 ### 2. Halaman Playlist
-Terdapat playlist user yang berisi lagu yang diisi sendiri oleh user tersebut.
+Halaman ini menampilkan daftar lagu yang telah di tambahkan ke playlist oleh user ke dalam playlist. selain melihat daftar lagu, pengguna juga dapat:
+- Memutar lagu pilihan langsung dari daftar playlist.
+- Menghapus lagu tertentu yang sudah tidak diinginkan dari playlist.
+- Mengubah nama playlist atau menghapus seluruh playlist melalui menu opsi.
+- Melihat total jumlah lagu yang tersimpan dalam satu playlist
 
 ### Keluar (Logout)
-Tombol Keluar digunakan untuk mengakhiri sesi admin dan keluar dari aplikasi dengan aman.
+Tombol Keluar digunakan untuk mengakhiri sesi admin atau user dan keluar dari aplikasi dengan aman.
 
 
 ## C. Algoritma yang Digunakan
@@ -108,8 +114,8 @@ Mudah diimplementasikan dan fleksibel
 ### 4. Algoritma Import Data Lagu(mp3)
 #### Cara Kerja:
     a. Admin memilih folder mp3
-    b. Sistem membaca file baris per baris
-    c. Setiap baris dipecah menjadi atribut lagu
+    b. Sistem memindai folder untuk menemukan semua file mp3
+    c. Sistem mengambil metadata (judul, artis, genre, tahun, durasi) secara otomatis
     d. Data divalidasi lalu disimpan ke database
 
 #### Implementasi:
@@ -172,185 +178,3 @@ Mudah diimplementasikan dan fleksibel
 #### Implementasi:
     a. Fungsi toggleShuffle pada controller_player.py
     b. Memanfaatkan modul random untuk mengacak indeks antrean pemutaran
-
-
-
-    
-
-
-    Memilih file audio (MP3) melalui tombol Browse (single file)
-
-#### Mengisi metadata lagu yang terdiri dari:
-    a. Judul lagu
-    b. Nama artis
-    c. Genre (dipilih dari dropdown)
-    d. Tahun rilis
-    e. Durasi lagu (dalam detik)
-
-Setelah data diisi dengan benar, admin dapat menyimpan data dengan menekan tombol Simpan, dan lagu akan langsung ditambahkan ke database.
-
-### 4. Import folder
-Fitur Import Folder Lagu digunakan untuk menambahkan banyak file musik sekaligus ke dalam sistem MyMusic dengan cara memindai (scan) satu folder yang berisi file MP3.
-
-    a. Menekan "pilih Folder & scan"
-    b. kemudian cari folder data lagu yang ingin diimport
-    c. setelah memilih folder lanjut klik "select folder"
-    d. import folder berhasil
-    
-Fitur ini memastikan proses input data menjadi lebih cepat dan efisien.
-
-
-**Akses bagian User:**
-
-### 1.  Halaman Home
-Halaman Home merupakan halaman utama yang digunakan oleh pengguna untuk menjelajahi dan memutar lagu. Pada halaman ini, sistem menampilkan daftar Trending Hits, yaitu lagu-lagu yang sedang populer dan direkomendasikan kepada pengguna. Informasi yang ditampilkan pada setiap lagu meliputi:
-
-    a. Judul lagu
-    b. Nama artis
-    c. Durasi lagu
-
-Pada halaman ini juga tersedia fitur:
-
-    a. Tombol Play untuk memutar lagu secara langsung
-    b. Music Player di bagian bawah halaman untuk mengontrol pemutaran lagu (play, pause, navigasi, dan volume)
-    c. Menu Playlist pada sidebar untuk mengakses dan mengelola playlist pengguna
-    d. Navigasi sederhana yang memudahkan pengguna berpindah antar halaman
-
-Halaman ini dirancang dengan tampilan yang intuitif sehingga pengguna dapat dengan mudah menemukan dan menikmati musik yang tersedia.
-
-### 2. Tambah Playlist
-Terdapat halaman untuk membuat play list.
-    
-    a. Tulis nama playlist yang ingin dibuat 
-    b. Kemudian setelah memasukan nama playlist, langsung saya untuk klik "Gas Bikin'
-    c. Playlist baru selesai dibuat
-
-### 3. Your Playlist
-di halaman ini terdapat playlist dari user tersebut yang terdapat:
-
-    a. Jumlah lagu
-    b. Ada lagu apaa saja di playlist ter tersebut
-    c. Lagu ada fitur untuk memutar lagu tersebut
-
-#### Tambahan:
-ada fitur tambahan juga yakni:
-
-    a. Hapus playlist
-    b. Ganti nama playlist
-
-### Keluar (Logout)
-Tombol Keluar digunakan untuk mengakhiri sesi admin dan keluar dari aplikasi dengan aman.
-
-
-## C. Algoritma yang Digunakan
-Pada aplikasi MyMusic, beberapa algoritma dasar digunakan untuk mendukung pengelolaan data lagu agar berjalan secara efisien dan terstruktur. Algoritma-algoritma ini diimplementasikan menggunakan bahasa pemrograman Python.
-
-### 1. Algoritma CRUD (Create, Read, Update, Delete)
-#### Cara Kerja:
-    a. Sistem menerima input dari admin melalui form atau file
-    b. Data divalidasi agar sesuai format
-    c. Data kemudian ditambahkan, ditampilkan, diperbarui, atau dihapus dari database
-
-#### Implementasi:
-    a. Create: digunakan saat admin menambah lagu baru atau import CSV
-    b. Read: digunakan untuk menampilkan data lagu pada tabel database
-    c. Update: digunakan saat admin mengedit informasi lagu
-    d. Delete: digunakan saat admin menghapus lagu tertentu
-
-Algoritma ini menjadi inti pengelolaan data pada aplikasi MyMusic.
-
-### 2. Algoritma Pencarian (Searching)
-#### Cara Kerja:
-    a. Admin memilih kategori pencarian (judul, artis, tahun, genre)
-    b. Admin memasukkan kata kunci pencarian
-    c. Sistem membandingkan kata kunci dengan data lagu satu per satu
-    d. Data yang cocok akan ditampilkan sebagai hasil pencarian
-
-#### Implementasi:
-    a. Menggunakan pencarian linear (linear search)
-    b. Cocok untuk jumlah data menengah
-
-Mudah diimplementasikan dan fleksibel
-
-### 3. Algoritma Pagination
-#### Cara Kerja:
-    a. Sistem membagi data lagu ke dalam beberapa halaman
-    b. Setiap halaman menampilkan jumlah data tertentu
-    c. Admin dapat berpindah halaman menggunakan tombol navigasi
-
-#### Implementasi:
-    a. Data dipotong berdasarkan indeks awal dan akhir
-    b. Membantu meningkatkan performa dan keterbacaan data
-
-### 4. Algoritma Import Data CSV
-#### Cara Kerja:
-    a. Admin memilih file CSV
-    b. Sistem membaca file baris per baris
-    c. Setiap baris dipecah menjadi atribut lagu
-    d. Data divalidasi lalu disimpan ke database
-
-#### Implementasi:
-    a. Menggunakan modul CSV Python
-    b. Menghindari input manual satu per satu
-
-### 5. Algoritma Backup Data (JSON)
-#### Cara Kerja:
-    a. Sistem mengambil seluruh data lagu yang tersimpan
-    b. Data diubah ke format JSON
-    c. File JSON disimpan sebagai cadangan data
-
-#### Implementasi:
-    a. Menggunakan serialisasi JSON
-    b. Memudahkan proses backup dan restore data
-    
-#### 6. Struktur Data Doubly linked list
-#### Cara Kerja:
-    a. Setiap lagu disimpan dalam sebuah Node
-    b. Setiap Node memiliki pointer prev dan next
-    c. Memungkinkan navigasi dua arah (maju ke lagu berikutnya atau mundur ke lagu sebelumnya) dengan efisien
-
-#### Implementasi:
-    a. Digunakan pada Class SongLibrary dan Playlist untuk manajemen urutan lagu
-    b. Operasi penyisipan (insert) dan penghapusan (delete) node dilakukan dengan memutus dan menyambung pointer antar node
-
-#### 7. Algoritma Fuzzy Search
-#### Cara Kerja:
-    a. Menggunakan algoritma Levenshtein Distance untuk menghitung jarak perbedaan antara dua string
-    b. Menghitung jumlah operasi minimum (penyisipan, penghapusan, atau penggantian karakter) yang diperlukan untuk mengubah kata kunci pencarian menjadi judul/artis lagu
-
-#### Implementasi:
-    a. Terdapat pada modul fuzzy_search.py
-    b. Jika pengguna mengetik "Imagin", sistem tetap dapat menemukan lagu "Imagine" karena jarak editnya kecil
-
-#### 8. Struktur Data Queue dan Stack (Playlist & History)
-#### Cara Kerja:
-    a. Queue (Antrean) Digunakan pada PlayerController untuk menyimpan daftar lagu yang akan diputar selanjutnya (next)
-    b. Stack (Tumpukan): Digunakan untuk fitur History
-
-#### Implementasi:
-    a. Variabel self.queue pada controller_player.py berfungsi sebagai antrean lagu yang sedang aktif
-    b. Variabel self.history berfungsi mencatat jejak lagu untuk navigasi mundur
-
-#### 9. Algoritma Pengurutan (Sorting)
-#### Cara Kerja:
-    a. Mengambil seluruh node dari Linked List
-    b. Membandingkan atribut tertentu (key) antar elemen
-    c. Menyusun ulang urutan elemen berdasarkan abjad atau angka
-    
-#### Implementasi:
-    a. Fungsi getSortedSongs pada library.py
-    b. Menggunakan Timsort (algoritma sorting bawaan Python yang sangat efisien, gabungan Merge Sort dan Insertion Sort)
-
-#### 10. Algoritma Fisher-Yates Shuffle (Pengacakan Lagu)
-#### Cara Kerja:
-    a. Algoritma membuat permutasi acak dari daftar lagu yang ada di antrean (queue)
-    b. Memastikan setiap lagu memiliki peluang yang sama untuk muncul di urutan mana pun.
-
-#### Implementasi:
-    a. Fungsi toggleShuffle pada controller_player.py
-    b. Memanfaatkan modul random untuk mengacak indeks antrean pemutaran
-
-
-
-    
-
