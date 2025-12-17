@@ -5,6 +5,18 @@ Tujuan utama pada tahap ini adalah untuk menyempurnakan interaksi pengguna. Ini 
 
 Secara keseluruhan, Tahap 3 bertujuan untuk menguji batas fungsionalitas aplikasi dengan data dunia nyata atau data yang lebih kompleks, menciptakan fondasi bagi fitur-fitur yang dipersonalisasi seperti pencarian canggih dan manajemen daftar putar pengguna.
 
+### Transisi Utama: Dari .csv ke .mp3
+Perubahan paling signifikan pada tahap ini adalah:
+Tahap Sebelumnya: Data lagu bersifat dummy dan dibaca secara manual dari file songs.csv.
+Tahap 3: Aplikasi secara otomatis memindai folder musik, mengekstraksi metadata langsung dari file .mp3, dan menyimpannya ke database songs_store.json
+
+#### Alasan Transisi (.csv ke .mp3)
+Perpindahan ini dilakukan untuk mengotomatisasi manajemen library musik. Dengan beralih ke pengolahan file .mp3, aplikasi tidak lagi bergantung pada input manual di file .csv, melainkan menggunakan algoritma pemindaian folder dan ekstraksi metadata (TinyTag) untuk membangun basis data secara otomatis dan akurat
+
+### Alasan Transisi (.csv ke .mp3)
+Perpindahan ini dilakukan untuk mengotomatisasi manajemen library musik. Dengan beralih ke pengolahan file .mp3, aplikasi tidak lagi bergantung pada input manual di file .csv, melainkan menggunakan algoritma pemindaian folder dan ekstraksi metadata (TinyTag) untuk membangun basis data secara otomatis dan akurat
+
+
 ### songs_store.json
 Merupakan database utama berbasis JSON yang menyimpan metadata lagu lengkap. File ini menggantikan format CSV untuk memastikan performa pembacaan data yang lebih cepat dan struktur data yang lebih rapi.
 
