@@ -10,7 +10,7 @@ Perubahan paling signifikan pada tahap ini adalah:
 Tahap Sebelumnya: Data lagu bersifat dummy dan dibaca secara manual dari file songs.csv.
 Tahap 3: Aplikasi secara otomatis memindai folder musik, mengekstraksi metadata langsung dari file .mp3, dan menyimpannya ke database songs_store.json
 
-#### Alasan Transisi (.csv ke .mp3)
+### Alasan Transisi (.csv ke .mp3)
 Perpindahan ini dilakukan untuk mengotomatisasi manajemen library musik. Dengan beralih ke pengolahan file .mp3, aplikasi tidak lagi bergantung pada input manual di file .csv, melainkan menggunakan algoritma pemindaian folder dan ekstraksi metadata (TinyTag) untuk membangun basis data secara otomatis dan akurat
 
 ### Alasan Transisi (.csv ke .mp3)
