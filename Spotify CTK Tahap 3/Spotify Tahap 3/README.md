@@ -5,17 +5,14 @@ Tujuan utama pada tahap ini adalah untuk menyempurnakan interaksi pengguna. Ini 
 
 Secara keseluruhan, Tahap 3 bertujuan untuk menguji batas fungsionalitas aplikasi dengan data dunia nyata atau data yang lebih kompleks, menciptakan fondasi bagi fitur-fitur yang dipersonalisasi seperti pencarian canggih dan manajemen daftar putar pengguna.
 
+### songs_store.json
+Merupakan database utama berbasis JSON yang menyimpan metadata lagu lengkap. File ini menggantikan format CSV untuk memastikan performa pembacaan data yang lebih cepat dan struktur data yang lebih rapi.
+
 ### playlists.json
 File baru yang sangat penting di Tahap 3. Ini akan digunakan untuk menyimpan data daftar putar (playlists) pengguna, baik dummy untuk pengembangan atau hasil caching dari API Spotify. Ini adalah persiapan langsung untuk fitur personalisasi pengguna.
 
-### components, logic, pages_admin, pages_user
-Struktur modular ini (diwarisi dari Tahap 2) akan diperluas untuk mengakomodasi logika API dan tampilan UI baru (misalnya, halaman 'Search' atau halaman 'Profile').
-
-### gabung.py, full_codebase.txt
-File legacy yang harus dihilangkan di Tahap 3 untuk menjaga kode tetap bersih, seperti yang telah kita diskusikan sebelumnya.
-
-### songs.csv, songs_dummy_real.csv, songs_store.json
-Data dummy ini akan dipertahankan untuk tujuan testing (uji coba), tetapi fungsi utamanya adalah sebagai fallback ketika integrasi API selesai.
-
 ### login.py
 Akan ditingkatkan untuk menangani proses autentikasi OAuth atau otorisasi token yang diperlukan untuk mengakses data pengguna dari Spotify API.
+
+### Kesimpulan
+Aplikasi MyMusic Tahap 3 telah berhasil diimplementasikan sebagai pemutar musik lokal yang stabil. Dengan kombinasi struktur data Doubly Linked List dan database JSON, aplikasi mampu memberikan performa navigasi yang mulus dan manajemen data yang persisten bagi pengguna.
