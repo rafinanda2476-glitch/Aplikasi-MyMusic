@@ -13,10 +13,6 @@ Tahap 3: Aplikasi secara otomatis memindai folder musik, mengekstraksi metadata 
 ### Alasan Transisi (.csv ke .mp3)
 Perpindahan ini dilakukan untuk mengotomatisasi manajemen library musik. Dengan beralih ke pengolahan file .mp3, aplikasi tidak lagi bergantung pada input manual di file .csv, melainkan menggunakan algoritma pemindaian folder dan ekstraksi metadata (TinyTag) untuk membangun basis data secara otomatis dan akurat
 
-### Alasan Transisi (.csv ke .mp3)
-Perpindahan ini dilakukan untuk mengotomatisasi manajemen library musik. Dengan beralih ke pengolahan file .mp3, aplikasi tidak lagi bergantung pada input manual di file .csv, melainkan menggunakan algoritma pemindaian folder dan ekstraksi metadata (TinyTag) untuk membangun basis data secara otomatis dan akurat
-
-
 ### songs_store.json
 Merupakan database utama berbasis JSON yang menyimpan metadata lagu lengkap. File ini menggantikan format CSV untuk memastikan performa pembacaan data yang lebih cepat dan struktur data yang lebih rapi.
 
